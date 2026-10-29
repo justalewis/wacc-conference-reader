@@ -17,3 +17,5 @@ Known weak years, stated on the site: 2002 is an OCR'd scan, 2008 has authors wi
 Licenses: the code is MIT. `data/cccc.db` is the release of the CCCC Convention Program Corpus (CC BY 4.0, https://doi.org/10.5281/zenodo.23751615). `data/iwac.db` is parsed from programs hosted by the WAC Clearinghouse and is included with the Clearinghouse's permission; no separate data license has been set for it yet, so ask before redistributing it.
 
 Live site: https://wacc-conference-reader.fly.dev/
+
+Cite: Lewis, Justin. WAC Clearinghouse Conference Archives Reader (v0.1.0). Zenodo, https://doi.org/10.5281/zenodo.23780138 (all versions; v0.1.0 is 10.5281/zenodo.23780139).

@@ -5,6 +5,11 @@ type: software
 version: "0.1.0"
 date-released: "2026-10-29"
 license: MIT
+doi: "10.5281/zenodo.23780138"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23780139"
+    description: "Version 0.1.0. The first DOI above resolves to all versions."
 repository-code: "https://github.com/justalewis/wacc-conference-reader"
 url: "https://wacc-conference-reader.fly.dev"
 abstract: "A Flask application that reads the programs of the CCCC and IWAC conferences with one set of tools: census, institutions, atlas, panel network, areas, terms over time, search and a corpus builder."
