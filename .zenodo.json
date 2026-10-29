@@ -1,0 +1,23 @@
+{
+  "title": "WAC Clearinghouse Conference Archives Reader: CCCC and IWAC program readers",
+  "upload_type": "software",
+  "description": "<p>A Flask application that reads the printed programs of two conference series, the Conference on College Composition and Communication (CCCC) and the International Writing Across the Curriculum Conference (IWAC), and offers one set of tools across both: census by year, institutions, atlas, panel network, areas, terms over time, search and a corpus builder. A selector page at the root sends visitors to either archive.</p><p>The CCCC reader is the code of the CCCC Program Reader (https://doi.org/10.5281/zenodo.23753772), made prefix-safe so both readers can be mounted in one site. The IWAC reader reads programs hosted by the WAC Clearinghouse, parsed from PDF and web programs for 2002 to 2025. The IWAC data is used with the Clearinghouse's permission. Several years are weak and say so on the site: 2002 is an OCR'd scan, 2008 has authors without institutions, and 2016 prints names and institutions without a separator.</p><p>Person pages exist only for people listed at two or more conferences, every page is noindex, and session descriptions are left out of the databases. The code is MIT licensed. The repository includes the Fly deployment files and notes for hosting the site under IIS.</p>",
+  "creators": [
+    {"name": "Lewis, Justin", "affiliation": "Olympic College", "orcid": "0000-0003-2144-7971"}
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "keywords": [
+    "WAC Clearinghouse",
+    "International Writing Across the Curriculum Conference",
+    "Conference on College Composition and Communication",
+    "writing studies",
+    "conference programs",
+    "disciplinography",
+    "Flask"
+  ],
+  "related_identifiers": [
+    {"identifier": "10.5281/zenodo.23753772", "relation": "isDerivedFrom", "scheme": "doi", "resource_type": "software"},
+    {"identifier": "10.5281/zenodo.23751615", "relation": "isSupplementTo", "scheme": "doi", "resource_type": "dataset"}
+  ]
+}
