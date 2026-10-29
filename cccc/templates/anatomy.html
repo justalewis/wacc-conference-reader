@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% block title %}Program anatomy · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Program anatomy</h1>
+<p class="lede">How the convention is built: how many sessions it holds, in which formats, and how many people each lists.</p>
+<div class="caveat">Formats come from eShow’s session types for 2024–2027 and from the session code for earlier years: a single letter is a concurrent session, W, MW, AW and SW are workshops, a SIG code is a group meeting, and POS is a poster. eShow also separates individual presentations (one person, 30 minutes) from panels. The older programs mark few roundtables, so that count is low before 2024. 2000–2003 and 2018 have no sessions in the corpus, and the Research Network Forum (code RN) is not counted. See <a href="{{ P }}/how-to-read">how to read</a>.</div>
+<h2>Sessions by format</h2>
+<div class="chart" style="height:360px"><canvas id="c1" role="img" aria-label="Stacked bars of sessions by format, by year"></canvas></div>
+<h2>People listed per concurrent session</h2>
+<p class="small">The mean and the median number of names printed for a concurrent session (panels, not individual presentations). The virtual years' on-demand sessions are counted under “other.” A rise can mean larger panels, or more of the program being listed in the source.</p>
+<div class="chart" style="height:260px"><canvas id="c2" role="img" aria-label="Mean and median people per session by year"></canvas></div>
+<h2>By year</h2>
+<div class="tbl"><table><thead><tr><th>Year</th>{% for f in formats %}<th class="n">{{ f }}</th>{% endfor %}<th class="n">People per concurrent session</th></tr></thead><tbody>
+{% for y in years %}<tr><td><a href="{{ P }}/year/{{ y }}">{{ y }}</a></td>{% for f in formats %}<td class="n">{{ counts[y].get(f, 0) }}</td>{% endfor %}<td class="n">{% if sizes.get(y) %}{{ sizes[y][0] }} (median {{ sizes[y][1] }}){% endif %}</td></tr>{% endfor %}
+</tbody></table></div>
+<script src="{{ P }}/static/chart.umd.min.js"></script><script src="{{ P }}/static/chart-defaults.js"></script>
+<script>
+const D = {{ data|safe }}, yrs = D.years;
+const pal = ["#a0522d", "#c9a27a", "#4f6f8f", "#6b8f4f", "#8a6fb0", "#c08a2a", "#3d7f7f", "#888888"];
+const bands = {id: "bands", beforeDatasetsDraw(ch) { const {ctx, chartArea: a, scales: {x}} = ch; if (!x) return; ctx.save();
+  const w = x.getPixelForValue(1) - x.getPixelForValue(0);
+  D.breaks.forEach(b => { const L = x.getPixelForValue(yrs.indexOf(b.from)) - w / 2, R = x.getPixelForValue(yrs.indexOf(b.to)) + w / 2;
+    ctx.fillStyle = b.kind === "gap" ? "rgba(150,140,120,.22)" : b.kind === "source" ? "rgba(79,111,143,.16)" : "rgba(160,80,40,.12)"; ctx.fillRect(L, a.top, R - L, a.bottom - a.top); }); ctx.restore(); }};
+new Chart(document.getElementById("c1"), {type: "bar", plugins: [bands], data: {labels: yrs, datasets: D.formats.map((f, i) => ({label: f, backgroundColor: pal[i], data: yrs.map(y => (D.counts[y] || {})[f] ?? null)}))},
+  options: {maintainAspectRatio: false, scales: {x: {stacked: true}, y: {stacked: true, title: {display: true, text: "sessions"}}}, plugins: {legend: {position: "bottom"}}}});
+new Chart(document.getElementById("c2"), {type: "line", plugins: [bands], data: {labels: yrs, datasets: [
+  {label: "mean", borderColor: "#a0522d", backgroundColor: "#a0522d", tension: 0, data: yrs.map(y => D.sizes[y] ? D.sizes[y].mean : null)},
+  {label: "median", borderColor: "#4f6f8f", backgroundColor: "#4f6f8f", tension: 0, borderDash: [5, 4], data: yrs.map(y => D.sizes[y] ? D.sizes[y].median : null)}]},
+  options: {maintainAspectRatio: false, scales: {y: {beginAtZero: true}}}});
+</script>
+{% endblock %}

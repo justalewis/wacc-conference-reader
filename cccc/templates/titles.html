@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Titles with “{{ term }}” · CCCC Program Reader{% endblock %}
+{% block main %}
+<p class="small"><a href="{{ P }}/trends?terms={{ term|urlencode }}&scope={{ scope }}">← Back to the trend</a></p>
+<h1>Titles with “{{ term }}”{% if y %} in {{ y }}{% endif %}</h1>
+<p class="meta">{{ total|num }} titles{% if total > rows|length %}; the first {{ rows|length }} are shown{% endif %}.</p>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Title</th><th>Kind</th><th>Session</th></tr></thead><tbody>
+{% for r in rows %}<tr><td>{{ r[0] }}</td><td>{{ r[3] }}</td><td>{{ 'paper' if r[1] == 'paper' else 'session' }}</td><td><a href="{{ P }}/session/{{ r[2] }}">{{ sess[r[2]].code if r[2] in sess and sess[r[2]].code else 'open' }}</a></td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

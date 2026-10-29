@@ -1,0 +1,6 @@
+__pycache__
+*.pyc
+server.log
+test_smoke.py
+build_iwac.py
+.git

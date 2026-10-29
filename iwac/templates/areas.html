@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Areas · IWAC Program Reader{% endblock %}
+{% block main %}
+<h1>Areas</h1>
+<p class="lede">Only the 2020 and 2025 programs print an area for each session. The earlier programs group sessions by room and time, so no areas can be read from them.</p>
+<div class="caveat">The area names are the conference's own and they change between the two years. This page does not join them into families.</div>
+{% for y, rows in by %}<h2><a href="{{ P }}/year/{{ y }}">{{ y }}</a></h2>
+<ul class="plain">{% for a, n in rows %}<li><a href="{{ P }}/area/{{ a|urlencode }}">{{ a }}</a>: {{ n|num }} sessions</li>{% endfor %}</ul>{% endfor %}
+{% endblock %}

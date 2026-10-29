@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Conventions · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Conventions, themes and program chairs</h1>
+<p class="lede">Every CCCC convention from 1950 on, with its dates, site, theme and program chair as NCTE lists them. For the years in the corpus (1998 on), the last column asks a simple question: how often do the words of the theme turn up in that year's session and paper titles, compared with the other years?</p>
+<div class="caveat">Dates, sites, themes and chairs come from NCTE's page on past conventions ({{ n_theme }} themes are listed; the first appears in {{ first_theme }}, and the page has none for 2026 or 2027 yet). The <b>echo</b> is a rough measure. It counts titles that use any distinctive word from the theme (words in more than 3% of all titles, like “writing,” are left out), a word matches from its start (“gateway” finds “gateways”), and a theme's words may be ordinary in the field. Read it as a hint, then open the titles.</div>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Dates</th><th>Site</th><th>Theme</th><th>Program chair</th><th class="n">Theme words in titles</th></tr></thead><tbody>
+{% for r in rows %}<tr>
+<td>{% if r.in_corpus %}<a href="{{ P }}/year/{{ r.year }}">{{ r.year }}</a>{% else %}{{ r.year }}{% endif %}{% if r.status in ('cancelled','virtual','upcoming') %} <span class="badge">{{ r.status }}</span>{% endif %}</td>
+<td class="small">{{ r.dates or '' }}</td><td>{{ r.site or r.city or '' }}</td><td>{{ r.theme or '' }}</td>
+<td>{% if r.chair_pid %}<a href="{{ P }}/person/{{ r.chair_pid }}">{{ r.chair }}</a>{% else %}{{ r.chair or '' }}{% endif %}</td>
+<td class="n small">{% if r.echo %}{{ r.echo.this|pct(1) }} <span title="Share of titles in other years that use the same words">(others {{ r.echo.other|pct(1) }})</span>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>
+<p class="small">Program chairs are named here from NCTE's page. A chair links to a person page when the name matches someone listed at two or more conventions in the corpus.</p>
+{% endblock %}

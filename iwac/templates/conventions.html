@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Conferences · IWAC Program Reader{% endblock %}
+{% block main %}
+<h1>Conferences, cities and themes</h1>
+<p class="lede">The twelve IWAC conferences in the corpus, 2002 to 2025, with the city, what is known of the theme, and what the program lets us read.</p>
+<div class="caveat">The conference ran every two years (2002 to 2018, then 2020 held in 2021, 2023, 2025). Each program was read by a parser written for that year's layout, so the notes below say where the reading is weak.</div>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Site</th><th>Notes</th><th class="n">Sessions</th><th class="n">People</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><a href="{{ P }}/year/{{ r.year }}">{{ r.year }}</a>{% if r.status in ('cancelled','virtual','upcoming') %} <span class="badge">{{ r.status }}</span>{% endif %}</td>
+<td>{{ r.city or '' }}</td><td class="small">{{ r.theme or '' }}{% if notes.get(r.year) %}<br>{{ notes[r.year] }}{% endif %}</td><td class="n">{{ r.sessions|num }}</td><td class="n">{{ r.people|num }}</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

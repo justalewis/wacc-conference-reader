@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}Call and program · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Call and program</h1>
+<p class="lede">Each year CCCC publishes a call for proposals, and the program is what came back. This page sets the two side by side: for each call, the words most particular to it, and how often those words turn up in the titles of that year’s sessions and papers, against titles in other years.</p>
+<div class="caveat">The call text is NCTE’s, so it is not reproduced here; each call is linked at NCTE where it is still online. The reader found calls for {{ rows|length }} years: 2010–2012, 2014–2019 and 2022–2027 (the others are not online). A call’s <b>particular words</b> are words of five or more letters used at least three times in it and in few other calls, after dropping dates, host cities and submission vocabulary. The <b>echo</b> shows whether the program took up the call’s language. It is not a measure of influence, since a call and a program draw on the same field, and short calls (2014, 2026) leave few particular words. Read it as a hint, then open the titles.</div>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Theme</th><th>Particular words in the call</th><th class="n">Titles using one of them</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><a href="{{ P }}/year/{{ r.year }}">{{ r.year }}</a><br><a class="small" href="{{ r.source_url }}">NCTE’s call{% if r.kind == 'pdf' %} (PDF){% endif %}</a></td>
+<td>{{ r.theme or '' }}</td>
+<td>{% for t in r.terms %}<span class="badge" title="{{ t.in_call }} uses in the call; in {{ t.title_share_this|pct(1) }} of {{ r.year }} titles and {{ t.title_share_other|pct(1) }} of other years’">{{ t.term }}</span> {% endfor %}</td>
+<td class="n">{% if r.echo_this is not none %}{{ r.echo_this|pct(1) }}<br><span class="small">(other years {{ r.echo_other|pct(1) }})</span>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>
+<p class="small">Hover a word to see how often it appears in titles that year and in other years. <a href="{{ P }}/trends">Terms over time</a> follows any word across all years.</p>
+{% endblock %}

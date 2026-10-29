@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}About · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>About</h1>
+<p class="lede">The CCCC Program Reader is a working tool for studying who appears in the programs of the Conference on College Composition and Communication. It is a draft and changes often.</p>
+<h2>Where it comes from</h2>
+<p>The programs are NCTE's. The reader's data is a parse of them: sessions, the names listed in each, the affiliations as printed, and paper titles. It leaves out NCTE's session descriptions. The corpus behind it is public, with its code and method, at <a href="{{ repo_url }}">{{ repo_url }}</a>, and the tables can be queried at <a href="{{ data_url }}">{{ data_url }}</a>.</p>
+<h2>What it is for</h2>
+<p>It is built to ground three kinds of work: who convenes the field and how that has changed (disciplinography), how the organization's own categories and formats changed (historiography), and trends in topics and participation. The first question it answers is the one on the home page.</p>
+<h2>How to cite</h2>
+<p>Cite the page you used (each session page ends with a citation), or cite a downloaded corpus with the citation the <a href="{{ P }}/corpus">corpus builder</a> prints. Data was built {{ build_date }}.</p>
+<h2>License and credit</h2>
+<p>The data is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 (CC BY 4.0)</a> and the code under the MIT license. You may reuse and adapt the data for any purpose if you give credit: Lewis, Justin. <i>CCCC Convention Program Corpus</i>, version 0.1.0. Zenodo, 2026. <a href="https://doi.org/10.5281/zenodo.23751615">https://doi.org/10.5281/zenodo.23751615</a>. The code is at <a href="{{ repo_url }}">{{ repo_url }}</a> and archived at <a href="https://doi.org/10.5281/zenodo.23753772">https://doi.org/10.5281/zenodo.23753772</a>. The programs themselves are NCTE's. The data holds the facts printed in them and our matching and groupings, and leaves out NCTE's session descriptions. Corrections: <a href="mailto:justalewis1@gmail.com">justalewis1@gmail.com</a>.</p>
+<h2>What it does not have yet</h2>
+<p>2000–2003 and the years before 1998 (they need the printed programs), proposal areas for 1998–1999 and 2018 (2018 used hashtags), calls for proposals, links from papers to later articles.</p>
+<p class="small">Sibling projects: <a href="https://pinakes.wacclearinghouse.org">Pinakes</a>, an index of rhetoric and composition scholarship, and the WPA-L Archive Reader.</p>
+{% endblock %}

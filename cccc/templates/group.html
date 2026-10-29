@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}{{ g.name }} · CCCC Program Reader{% endblock %}
+{% block main %}
+<p class="small"><a href="{{ P }}/groups">← All groups</a></p>
+<h1>{{ g.name }}</h1>
+<p class="meta"><span class="badge">{{ g.kind }}</span> · {{ g.sessions }} sessions in {{ g.years }} conventions, {{ g.first_year }}–{{ g.last_year }}</p>
+<h2>Sessions</h2>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Code</th><th>Title as printed</th></tr></thead><tbody>
+{% for s in sess %}<tr><td><a href="{{ P }}/year/{{ s.year }}">{{ s.year }}</a></td><td>{{ s.code or '' }}</td><td><a href="{{ P }}/session/{{ s.id }}">{{ s.title }}</a>{% if s.cancelled %} <span class="badge warn">cancelled</span>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>
+<h2>People listed</h2>
+<p class="small">{{ n_all|num }} people are listed on these sessions. Named here: people listed at two or more conventions, by how many years they appear with this group.</p>
+<ul class="plain cols">{% for p in people %}<li><a href="{{ P }}/person/{{ p.person_id }}">{{ p.display_name }}</a> <span class="small">{{ p.yrs }} {{ 'year' if p.yrs == 1 else 'years' }}</span></li>{% endfor %}</ul>
+{% endblock %}

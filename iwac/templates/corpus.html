@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block title %}Build a corpus · IWAC Program Reader{% endblock %}
+{% block main %}
+<h1>Build a corpus</h1>
+<p class="lede">Choose a slice of the listings, see how many it holds, and download it with a citation. The address of this page is the corpus: send it to someone and they get the same slice of the same build.</p>
+<form class="controls" method="get">
+  <label>Titles contain <input type="text" name="q" value="{{ a.get('q','') }}" size="18"></label>
+  <label>From <input type="number" name="y0" value="{{ a.get('y0','') }}" min="2002" max="2025" style="width:5.5rem"></label>
+  <label>to <input type="number" name="y1" value="{{ a.get('y1','') }}" min="2002" max="2025" style="width:5.5rem"></label>
+  <label>Role <select name="role"><option value="">any</option>{% for r in ['chair','presenter','respondent','facilitator','workshop leader'] %}<option {{ 'selected' if a.get('role')==r }}>{{ r }}</option>{% endfor %}</select></label>
+  <label>Institution contains <input type="text" name="inst" value="{{ a.get('inst','') }}" size="18"></label>
+  <label><input type="checkbox" name="non_us" value="1" {{ 'checked' if a.get('non_us')=='1' }}> outside the US</label>
+  <button>Show</button></form>
+{% if has %}
+<h2>{{ n|num }} listings{% if capped %} (the limit){% endif %}</h2>
+<p class="small">{{ label }}</p>
+<p><a class="btn" href="{{ P }}/export.csv?{{ qs }}">Download CSV</a> <a class="btn alt" href="{{ P }}/export.json?{{ qs }}">Download JSON</a></p>
+<h3>Cite this corpus</h3><div class="cite">{{ cite }}</div>
+<p class="small">This is a draft. Terms for reuse are pending with the WAC Clearinghouse, so do not redistribute the export yet.</p>
+<h3>First rows</h3>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Session</th><th>Role</th><th>Name</th><th>Affiliation as printed</th><th>Paper</th></tr></thead><tbody>
+{% for r in sample %}<tr><td>{{ r.year }}</td><td><a href="{{ P }}/session/{{ r.session_id }}">{{ r.session_title or r.code }}</a></td><td>{{ r.role_group }}</td><td>{{ r.name_as_printed }}</td><td>{{ r.affiliation_as_printed or '' }}</td><td>{{ r.paper_title or '' }}</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="caveat">Exports carry names as printed in the public program. Read <a href="{{ P }}/ethics">the ethics page</a> before using them for work about individuals, and check <code>person_id</code> before counting careers: names are joined on an exact match plus reviewed pairs.</div>
+{% else %}<p class="small">Pick at least one filter. Leave everything else blank.</p>{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Institutions · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Institutions</h1>
+<p class="lede">Every institution a printed affiliation was matched to, ranked by how often it appears.</p>
+<form class="controls" method="get"><input type="text" name="q" value="{{ qs }}" placeholder="Name contains" aria-label="Name contains">
+  <label><input type="checkbox" name="two_year" value="1" {{ 'checked' if two }}> two-year colleges</label>
+  <label><input type="checkbox" name="non_us" value="1" {{ 'checked' if non_us }}> outside the US</label><button>Filter</button></form>
+<div class="tbl"><table><thead><tr><th>Institution</th><th>Place</th><th class="n">Listings</th><th class="n">Years</th><th>Span</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><a href="{{ P }}/institution/{{ r.id }}">{{ r.name }}</a>{% if r.two_year %} <span class="badge">two-year</span>{% endif %}</td><td>{{ r.state or r.country or '' }}</td><td class="n">{{ r.n|num }}</td><td class="n">{{ r.years }}</td><td>{{ r.y0 }}–{{ r.y1 }}</td></tr>{% endfor %}
+</tbody></table></div>
+<p class="small">The first 200 matches. About 3% of printed affiliations are not matched to any institution (independent scholars, schools, publishers and a long tail).</p>
+{% endblock %}

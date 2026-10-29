@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}{{ s.title or s.code }} · CCCC Program Reader{% endblock %}
+{% block main %}
+<p class="small"><a href="{{ P }}/year/{{ s.year }}">{{ s.year }}{% if conv %} · {{ conv.city }}{% endif %}</a>{% if parent %} · part of <a href="{{ P }}/session/{{ parent.id }}">{{ parent.title }}</a>{% endif %}</p>
+<h1>{{ s.title or '(no title)' }}</h1>
+<p class="meta">{% if s.code %}Session {{ s.code }}{% endif %}{% if s.session_type %} · {{ s.session_type }}{% endif %}{% if s.dates %} · {{ s.dates }}{% endif %}{% if s.time_label %} · {{ s.time_label }}{% endif %}{% if s.room %} · {{ s.room }}{% endif %}{% if s.cancelled %} · <span class="badge warn">cancelled</span>{% endif %}</p>
+{% if s.area %}<p class="meta">Area: <a href="{{ P }}/area/{{ s.area|urlencode }}">{{ s.area }}</a>{% if s.area_group and s.area_group != s.area %} · family: {{ s.area_group }}{% endif %}</p>{% endif %}
+{% if grp %}<p class="meta">Group: <a href="{{ P }}/group/{{ grp.id }}">{{ grp.name }}</a> ({{ grp.kind }})</p>{% endif %}
+{% if s.topic_tags %}<p class="meta">Tags: {{ s.topic_tags }}</p>{% endif %}
+{% if s.tracks %}<p class="meta">eShow tracks: {{ s.tracks }}</p>{% endif %}
+{% if people %}<div class="tbl"><table><thead><tr><th>Role</th><th>Name as printed</th><th>Affiliation as printed</th><th>Paper</th></tr></thead><tbody>
+{% for p in people %}<tr><td>{{ p.role or '' }}</td>
+<td>{% if p.eligible %}<a href="{{ P }}/person/{{ p.person_id }}">{{ p.name_as_printed }}</a>{% else %}{{ p.name_as_printed }}{% endif %}</td>
+<td>{{ p.affiliation_as_printed or '' }}{% if p.institution_id %} <a class="small" href="{{ P }}/institution/{{ p.institution_id }}">→ {{ p.inst_name }}</a>{% if p.two_year %} <span class="badge">two-year</span>{% endif %}{% endif %}</td>
+<td>{{ p.paper_title or '' }}</td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p>This session has a title in the program but no listed people in the corpus.</p>{% endif %}
+{% if children %}<h2>Presentations in this panel</h2><ul>{% for c in children %}<li><a href="{{ P }}/session/{{ c.id }}">{{ c.title }}</a></li>{% endfor %}</ul>{% endif %}
+<h2>Source</h2>
+<p class="small">{% if link %}<a href="{{ link }}">NCTE's program{% if page is not none and doc.kind == 'pdf' %}, near page {{ page + 1 }} of the file{% endif %}</a>{% elif doc %}{{ doc.url }}{% endif %}. Names link to a person page only for people listed at two or more conventions.</p>
+<p class="small">Cite as: Conference on College Composition and Communication. “{{ s.title }}.” <i>{{ s.year }} Convention Program</i>{% if conv and conv.city %}, {{ conv.city }}{% endif %}{% if s.code %}, session {{ s.code }}{% endif %}. Via CCCC Program Reader, {{ today }}.</p>
+{% endblock %}

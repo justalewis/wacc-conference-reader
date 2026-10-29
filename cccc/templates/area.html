@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}{{ name }} · CCCC Program Reader{% endblock %}
+{% block main %}
+<p class="small"><a href="{{ P }}/areas">← All areas</a></p>
+<h1>{{ name }}</h1>
+<p class="meta">{{ rows|length }}{% if rows|length >= 600 %}+{% endif %} sessions. A heading name lists the sessions printed under it that year; a family name lists every session in the family.</p>
+<div class="chart" style="height:200px"><canvas id="c" role="img" aria-label="Sessions per year"></canvas></div>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Code</th><th>Session</th></tr></thead><tbody>
+{% for r in rows %}<tr><td>{{ r.year }}</td><td>{{ r.code or '' }}</td><td><a href="{{ P }}/session/{{ r.id }}">{{ r.title or '(no title)' }}</a></td></tr>{% endfor %}
+</tbody></table></div>
+<script src="{{ P }}/static/chart.umd.min.js"></script><script src="{{ P }}/static/chart-defaults.js"></script>
+<script>
+new Chart(document.getElementById("c"), {type: "bar", data: {labels: {{ by_year|map(attribute='year')|list|tojson }}, datasets: [{label: "Sessions", data: {{ by_year|map(attribute='n')|list|tojson }}, backgroundColor: "#a0522d"}]},
+  options: {maintainAspectRatio: false, plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true, ticks: {precision: 0}}}}});
+</script>
+{% endblock %}

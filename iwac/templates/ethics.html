@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}Ethics · IWAC Program Reader{% endblock %}
+{% block main %}
+<h1>Ethics</h1>
+<p class="lede">The programs are public documents, and the reader shows only what they print. It still sets limits on how names are used.</p>
+<ul>
+<li><b>Person pages</b> exist only for people listed at two or more conferences. A name that appears once is on its session page and nowhere else.</li>
+<li><b>No ranking.</b> The reader never scores or ranks a person, and it shows no attendance.</li>
+<li><b>No search indexing.</b> Every page asks search engines not to index it.</li>
+<li><b>Abstracts</b> are in the source programs but are not shown or exported.</li>
+<li><b>Errors</b> are likely, especially in 2002 (OCR), 2008 and 2016 (see how to read). A name can be wrong or split in two.</li>
+</ul>
+<p>To correct a match or ask that a page be removed, {% if contact %}write to {{ contact }}.{% else %}use the contact the Clearinghouse gives for this archive (to be added before launch).{% endif %}</p>
+{% endblock %}

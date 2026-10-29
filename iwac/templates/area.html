@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}{{ name }} · IWAC Program Reader{% endblock %}
+{% block main %}
+<p class="small"><a href="{{ P }}/areas">← Areas</a></p>
+<h1>{{ name }}</h1>
+<p class="small">{{ rows|length|num }} sessions, as the program printed the area.</p>
+<ul class="plain">{% for r in rows %}<li>{{ r.year }} · <a href="{{ P }}/session/{{ r.id }}">{{ r.title or r.code }}</a></li>{% endfor %}</ul>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% block title %}Atlas · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Atlas and host-city draw</h1>
+<p class="lede">Where the people listed in a program come from, by the institution they gave, with the host city marked. Then, for every convention, how much of the program came from near the city that hosted it.</p>
+<div class="caveat">Each dot is an institution, sized by its listings that year. The map shows institutions in the contiguous US with IPEDS coordinates: {{ a.on_map|num }} of the {{ a.total|num }} listings in {{ y }}. Alaska, Hawaii, territories, institutions outside the US, and affiliations with no match are not on the map. Distances are straight lines from the host city to each institution.</div>
+<form class="controls" method="get"><label>Year <select name="year" onchange="this.form.submit()">{% for yy in years %}<option {{ 'selected' if yy == y }}>{{ yy }}</option>{% endfor %}</select></label>
+<span class="small">{{ y }}{% if a.city %} · {{ a.city }}{% if a.status in ('cancelled','virtual') %} ({{ a.status }}){% endif %}{% endif %}</span></form>
+<div class="chart" style="height:auto;padding:0"><svg id="map" viewBox="0 0 960 600" width="100%" role="img" aria-label="Map of institutions listed in {{ y }}"></svg></div>
+<p class="legend small"><span><i style="background:#a0522d"></i>two-year college</span><span><i style="background:#4f6f8f"></i>other institution</span><span>◆ host city</span></p>
+<h2>How much of each program came from near the host city</h2>
+<p class="small">Share of listings, among institutions with coordinates, within 300 km and within 800 km of the host city, and the median distance. The virtual years have no host. San Francisco (2005, 2009) and Chicago (1998, 2006, 2023) repeat, which makes the comparison cleaner.</p>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Host</th><th class="n">Listings</th><th class="n">Within 300 km</th><th class="n">Within 800 km</th><th class="n">Median distance</th></tr></thead><tbody>
+{% for h in host %}<tr><td><a href="{{ P }}/atlas?year={{ h.year }}">{{ h.year }}</a></td><td>{{ h.city }}</td><td class="n">{{ h.listings|num }}</td><td class="n">{{ h.within_300|pct(0) }}</td><td class="n">{{ h.within_800|pct(0) }}</td><td class="n">{{ h.median_km|num }} km</td></tr>{% endfor %}
+</tbody></table></div>
+<p class="small">State outlines: US Atlas (Census Bureau cartographic boundaries), ISC license.</p>
+<script>
+const D = {{ data|safe }};
+const R = Math.PI / 180, p1 = 29.5 * R, p2 = 45.5 * R, p0 = 37.5 * R, l0 = -96 * R;
+const n = (Math.sin(p1) + Math.sin(p2)) / 2, C = Math.cos(p1) ** 2 + 2 * n * Math.sin(p1), r0 = Math.sqrt(C - 2 * n * Math.sin(p0)) / n;
+const proj = (lon, lat) => { const r = Math.sqrt(C - 2 * n * Math.sin(lat * R)) / n, t = n * (lon * R - l0); return [r * Math.sin(t), r0 - r * Math.cos(t)]; };
+// fit the contiguous US into 960 x 600
+const corners = [[-124.7, 49], [-67, 49], [-124.7, 25], [-67, 25], [-96, 49], [-96, 25], [-80, 25], [-83, 49]].map(c => proj(c[0], c[1]));
+const xs = corners.map(c => c[0]), ys = corners.map(c => c[1]);
+const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+const k = Math.min(920 / (x1 - x0), 570 / (y1 - y0)), ox = 20 - x0 * k, oy = 15 + y1 * k;
+const P = (lon, lat) => { const [x, y] = proj(lon, lat); return [ox + x * k, oy - y * k]; };
+const svg = document.getElementById("map"); const NS = "http://www.w3.org/2000/svg";
+const el = (name, attrs, parent) => { const e = document.createElementNS(NS, name); for (const a in attrs) e.setAttribute(a, attrs[a]); (parent || svg).appendChild(e); return e; };
+fetch("{{ P }}/static/us-states-10m.json").then(r => r.json()).then(topo => {
+  const [sx, sy] = topo.transform.scale, [tx, ty] = topo.transform.translate;
+  const arcs = topo.arcs.map(a => { let x = 0, y = 0; return a.map(p => { x += p[0]; y += p[1]; return [x * sx + tx, y * sy + ty]; }); });
+  const ring = idx => { let pts = []; idx.forEach(i => { const a = i < 0 ? arcs[~i].slice().reverse() : arcs[i]; pts = pts.concat(pts.length ? a.slice(1) : a); }); return pts; };
+  topo.objects.states.geometries.forEach(g => {
+    const polys = g.type === "Polygon" ? [g.arcs] : g.arcs; let d = "";
+    polys.forEach(poly => poly.forEach(r => { const pts = ring(r).filter(p => p[1] > 24 && p[1] < 50 && p[0] > -126 && p[0] < -66);
+      if (pts.length > 2) d += "M" + pts.map(p => P(p[0], p[1]).map(v => v.toFixed(1)).join(",")).join("L") + "Z"; }));
+    if (d) el("path", {d, fill: "var(--paper)", stroke: "var(--rule-strong)", "stroke-width": ".6"});
+  });
+  D.points.slice().sort((a, b) => b.n - a.n).forEach(p => { const [x, y] = P(p.lon, p.lat);
+    const c = el("circle", {cx: x.toFixed(1), cy: y.toFixed(1), r: (2.2 + Math.sqrt(p.n) * 1.3).toFixed(1), fill: p.two_year ? "#a0522d" : "#4f6f8f", "fill-opacity": ".55", stroke: "var(--gloss)", "stroke-width": ".4"});
+    el("title", {}, c).textContent = `${p.name}: ${p.n} listings, ${p.p} people`; });
+  if (D.host) { const [x, y] = P(D.host[1], D.host[0]); el("path", {d: `M${x},${y - 9}L${x + 7},${y}L${x},${y + 9}L${x - 7},${y}Z`, fill: "var(--gloss)", stroke: "var(--papyrus)", "stroke-width": "1.5"}); }
+});
+</script>
+{% endblock %}

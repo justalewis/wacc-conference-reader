@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Area by institution type · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Area by institution type</h1>
+<p class="lede">Of the listings from each kind of institution, how many sit under each family of proposal areas? A cell shows that share and, beneath it, how it compares with the program as a whole: above 1.0 means the type is listed under that family more often than the program is overall.</p>
+<div class="caveat">A listing is one person in one session that prints an area, so panels count once per person. The families are our crosswalk, and the lists of areas differ by era, so compare within a period and not across them. Cells with fewer than 20 listings from the type, or fewer than 5 in the cell, show no comparison. “No match” means the affiliation matched no institution. See <a href="{{ P }}/how-to-read">how to read</a>.</div>
+<form class="controls" method="get"><label>Period <select name="period" onchange="this.form.submit()">{% for p in periods %}<option {{ 'selected' if p == period }}>{{ p }}</option>{% endfor %}</select></label>
+<span class="small">{{ d.n|num }} listings with an area</span></form>
+<div class="tbl"><table><thead><tr><th>Family</th><th class="n">All listings</th>{% for t in types %}<th class="n">{{ t }}<br><span class="small">({{ d.type_totals.get(t, 0)|num }})</span></th>{% endfor %}</tr></thead><tbody>
+{% for r in d.rows %}<tr><td><a href="{{ P }}/area/{{ r.group|urlencode }}">{{ r.group }}</a></td><td class="n">{{ r.total|num }}</td>
+{% for t in types %}{% set c = r.cols[t] %}{% set lift = c.lift %}
+<td class="n" style="{% if lift is not none %}background: color-mix(in srgb, {{ '#a0522d' if lift >= 1 else '#4f6f8f' }} {{ ([(lift - 1)|abs * 60, 45]|min)|round|int }}%, transparent);{% endif %}">
+{% if c.share is not none %}{{ c.share|pct(1) }}{% if lift is not none %}<br><span class="small">{{ '%.2f' % lift }}×</span>{% endif %}{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+<p class="small">Terracotta cells are over-represented against the program as a whole and blue cells under-represented. The shading is a guide to where to look, not a test of significance.</p>
+{% endblock %}

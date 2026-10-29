@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Search · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Search</h1>
+<form class="controls" method="get"><input type="text" name="q" value="{{ text }}" size="40" aria-label="Search"><button>Search</button></form>
+{% if text and not res.get('sessions') and not res.get('papers') and not res.get('institutions') and not res.get('people') %}<p>No matches.</p>{% endif %}
+{% if res.get('people') %}<h2>People with a page</h2><ul class="plain">{% for p in res.people %}<li><a href="{{ P }}/person/{{ p.person_id }}">{{ p.display_name }}</a> <span class="small">{{ p.conventions }} conventions, {{ p.first_year }}–{{ p.last_year }}</span></li>{% endfor %}</ul>
+<p class="small">People listed at a single convention have no page. Search their name inside <a href="{{ data_url }}/cccc/appearances?_search={{ text|urlencode }}">the data</a>.</p>{% endif %}
+{% if res.get('institutions') %}<h2>Institutions</h2><ul class="plain">{% for i in res.institutions %}<li><a href="{{ P }}/institution/{{ i.id }}">{{ i.name }}</a> <span class="small">{{ i.country or '' }}</span></li>{% endfor %}</ul>{% endif %}
+{% if res.get('sessions') %}<h2>Session titles</h2><ul>{% for s in res.sessions %}<li>{{ s.year }} · <a href="{{ P }}/session/{{ s.id }}">{{ s.title }}</a></li>{% endfor %}</ul>{% endif %}
+{% if res.get('papers') %}<h2>Paper titles</h2><ul>{% for t in res.papers %}<li>{{ t.year }} · <a href="{{ P }}/session/{{ t.session_id }}">{{ t.text }}</a></li>{% endfor %}</ul>{% endif %}
+{% endblock %}

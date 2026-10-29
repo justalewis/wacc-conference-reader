@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% block title %}Proposal areas · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Proposal areas</h1>
+<p class="lede">CCCC's programs print an area above each session ("Theory," "Writing Programs"). The headings change from year to year. This page shows how much of each program sat under each family of headings, and how the headings themselves were renamed.</p>
+<div class="caveat">The areas are CCCC's own. The <b>families</b> that join renamed headings across years are ours (<code>data/area_crosswalk.csv</code>), not the organization's. One reader checked them in October 2026 and made no changes, but some joins are judgment calls. Some years add a <b>convention theme track</b> (2011, 2015, 2016, 2024, 2025) that took in a large share of sessions, which lowers every other share in those years. <b>The lists of areas differ by era</b>, so a family can rise or fall because CCCC added or dropped a heading: 2004–2010 had no first-year composition or social-justice area, and 2022–2026 has no institutional-and-professional, history-of-composition or language area as such. Read the table of headings below before reading the bars. 1998–2003 and 2018 have no areas (2018 used hashtags instead), and sessions without a printed area, such as most workshops and special sessions, are left out of the shares.</div>
+<div class="controls"><label><input type="checkbox" id="notheme"> set aside the convention theme track</label>
+  <label><input type="radio" name="mode" value="share" checked> share of sessions with an area</label> <label><input type="radio" name="mode" value="raw"> sessions</label></div>
+<div class="chart" style="height:380px"><canvas id="c" role="img" aria-label="Stacked bars of sessions by proposal-area family, by year"></canvas></div>
+<p class="small">The sessions here are those whose program page prints an area. Click a family in the table below to list its sessions.</p>
+<h2>How the headings changed</h2>
+<p class="small">Each row is a family. Each cell lists the headings the program used for it that year, with the number of sessions.</p>
+<div class="tbl"><table><thead><tr><th>Family</th>{% for y in years %}<th>{{ y }}</th>{% endfor %}</tr></thead><tbody>
+{% for g in order %}<tr><td><a href="{{ P }}/area/{{ g|urlencode }}">{{ g }}</a></td>{% for y in years %}<td class="small">{% for a, n in groups[g].get(y, []) %}{{ a }} ({{ n }}){% if not loop.last %}<br>{% endif %}{% endfor %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+<script src="{{ P }}/static/chart.umd.min.js"></script><script src="{{ P }}/static/chart-defaults.js"></script>
+<script>
+const D = {{ data|safe }};
+const yrs = D.years;
+const palette = ["#a0522d", "#4f6f8f", "#6b8f4f", "#8a6fb0", "#c08a2a", "#3d7f7f", "#b05a7a", "#7a7a3a", "#555555", "#9a6b3a", "#2f5f9f", "#7f9f3f", "#a04040", "#6a6aa0", "#999999"];
+const bands = {id: "bands", beforeDatasetsDraw(ch) { const {ctx, chartArea: a, scales: {x}} = ch; if (!x) return; ctx.save();
+  const w = x.getPixelForValue(1) - x.getPixelForValue(0);
+  D.breaks.forEach(b => { const L = x.getPixelForValue(yrs.indexOf(b.from)) - w / 2, R = x.getPixelForValue(yrs.indexOf(b.to)) + w / 2;
+    ctx.fillStyle = b.kind === "gap" ? "rgba(150,140,120,.22)" : b.kind === "source" ? "rgba(79,111,143,.16)" : "rgba(160,80,40,.12)"; ctx.fillRect(L, a.top, R - L, a.bottom - a.top); }); ctx.restore(); }};
+let chart;
+function draw() {
+  const mode = document.querySelector("input[name=mode]:checked").value, skip = document.getElementById("notheme").checked;
+  const series = D.series.filter(s => !(skip && s.group === D.theme));
+  const total = {}; yrs.forEach(y => total[y] = series.reduce((t, s) => t + (s.counts[y] || 0), 0));
+  const sets = series.map((s, i) => ({label: s.group, backgroundColor: palette[i % palette.length],
+    data: yrs.map(y => total[y] ? (mode === "share" ? 100 * (s.counts[y] || 0) / total[y] : (s.counts[y] || 0)) : null)}));
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById("c"), {type: "bar", data: {labels: yrs, datasets: sets}, plugins: [bands],
+    options: {maintainAspectRatio: false, scales: {x: {stacked: true}, y: {stacked: true, max: mode === "share" ? 100 : undefined, title: {display: true, text: mode === "share" ? "% of sessions with an area" : "sessions"}}},
+      plugins: {legend: {position: "bottom", labels: {boxWidth: 12, font: {size: 11}}}}}});
+}
+document.getElementById("notheme").addEventListener("change", draw); document.querySelectorAll("input[name=mode]").forEach(r => r.addEventListener("change", draw)); draw();
+</script>
+{% endblock %}

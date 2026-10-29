@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block title %}{{ i.name }} · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>{{ i.name }}</h1>
+<p class="meta">{% if i.country %}{{ i.country }}{% endif %}{% if i.state %} · {{ i.state }}{% endif %}{% if i.two_year %} · <span class="badge">two-year college</span>{% endif %}{% if i.hbcu %} · <span class="badge">HBCU</span>{% endif %}{% if i.tribal %} · <span class="badge">tribal college</span>{% endif %}
+{% if i.control %} · {{ {1: 'public', 2: 'private nonprofit', 3: 'private for-profit'}.get(i.control, '') }}{% endif %}{% if i.carnegie_basic and i.carnegie_basic > 0 %} · Carnegie basic class {{ i.carnegie_basic }}{% endif %}</p>
+<p class="small">{% if i.ror_id %}<a href="https://ror.org/{{ i.ror_id.split('/')[-1] }}">ROR</a>{% endif %}{% if i.ipeds_unitid %} · IPEDS unit {{ i.ipeds_unitid }}{% endif %} · <a href="{{ data_url }}/cccc/appearances?institution_id={{ i.id }}">rows in the data</a></p>
+<h2>Listings by year</h2>
+<div class="chart" style="height:220px"><canvas id="c" role="img" aria-label="Listings per convention year"></canvas></div>
+<h2>Printed as</h2>
+<ul class="plain">{% for p in printed %}<li class="small">{{ p.affiliation_as_printed }} ({{ p.n }})</li>{% endfor %}</ul>
+<h2>People ({{ total|num }} in all)</h2>
+<p class="small">Named here: people listed at two or more conventions. The others are counted but not named.</p>
+<ul class="plain cols">{% for p in people %}<li><a href="{{ P }}/person/{{ p.person_id }}">{{ p.display_name }}</a> <span class="small">{{ p.first_year }}–{{ p.last_year }}</span></li>{% endfor %}</ul>
+<h2>Recent sessions</h2>
+<ul>{% for s in sess %}<li>{{ s.year }} · <a href="{{ P }}/session/{{ s.id }}">{{ s.title or s.code }}</a></li>{% endfor %}</ul>
+<script src="{{ P }}/static/chart.umd.min.js"></script><script src="{{ P }}/static/chart-defaults.js"></script>
+<script>
+const rows = {{ by_year|map(attribute='year')|list|tojson }}, vals = {{ by_year|map(attribute='appearances')|list|tojson }}, ppl = {{ by_year|map(attribute='people')|list|tojson }};
+new Chart(document.getElementById("c"), {type: "bar", data: {labels: rows, datasets: [{label: "Listings", data: vals, backgroundColor: "#a0522d"}, {label: "People", data: ppl, backgroundColor: "#4f6f8f"}]},
+  options: {maintainAspectRatio: false, scales: {y: {beginAtZero: true, ticks: {precision: 0}}}}});
+</script>
+{% endblock %}

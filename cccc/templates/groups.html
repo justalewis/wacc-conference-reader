@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}Groups · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Groups</h1>
+<p class="lede">The programs give special interest groups, caucuses, standing groups and consortia their own meeting slots. This is a register of the names that held them, from the first convention in the corpus to the latest, with the years each one met.</p>
+<div class="caveat">This lists <b>sessions in the special-interest slots</b>, grouped by the name in the title. It is not an official list of CCCC's groups. A name's kind follows its latest wording, since many SIGs later became standing groups. Some slots held one-off topical discussions, and those appear as single-year entries (hidden unless you ask). Groups that changed names appear under each name unless an alias joins them. No slots appear for 2000–2003 and 2021–2022, and 2018's program used a different layout, so some groups look like they skipped those years.</div>
+<form class="controls" method="get"><input type="text" name="q" value="{{ qs }}" placeholder="Name contains" aria-label="Name contains">
+  <select name="kind" aria-label="Kind"><option value="">Any kind</option>{% for k in kinds %}<option {{ 'selected' if k == kind }}>{{ k }}</option>{% endfor %}</select>
+  <label><input type="checkbox" name="all" value="1" {{ 'checked' if every }}> include one-year entries ({{ total }} names in all)</label><button>Filter</button></form>
+<div class="tbl"><table><thead><tr><th>Group</th><th>Kind</th><th class="n">Years</th>{% for y in years if y >= 2004 %}<th class="n" title="{{ y }}">{{ "%02d" % (y % 100) }}</th>{% endfor %}</tr></thead><tbody>
+{% for g in rows %}<tr><td><a href="{{ P }}/group/{{ g.id }}">{{ g.name }}</a></td><td class="small">{{ g.kind }}</td><td class="n">{{ g.years }}</td>
+{% for y in years if y >= 2004 %}<td class="n">{{ '●' if y in present.get(g.id, []) else '' }}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+<p class="small">Showing {{ rows|length }}{% if rows|length >= 500 %} (the first 500){% endif %}. Column headings are the last two digits of the convention year.</p>
+<h2>Groups meeting each year</h2>
+<p class="small">{% for p in per_year %}{{ p.year }}: {{ p.n }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+{% endblock %}

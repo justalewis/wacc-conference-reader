@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}Tools · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Tools</h1>
+<p class="lede">Each tool asks a different question of the same programs. The first, on the home page, is the one the reader leads with.</p>
+{% set sections = [
+ ("Who convenes the field?", "Who is listed, from where, and how that has changed.", [
+   ("/", "Census by year", "People listed, newcomers, institution types, concentration and more, year by year."),
+   ("/institutions", "Institutions", "Every institution a printed affiliation matched, ranked, with its listings by year."),
+   ("/atlas", "Atlas and host-city draw", "A map of where listed people come from each year, and how much of each program came from near the host city."),
+   ("/area-types", "Area by institution type", "Which areas two-year colleges, public and private four-year colleges and international institutions are listed under.")]),
+ ("What does the field talk about?", "Topics, as CCCC named them and as titles show them.", [
+   ("/areas", "Proposal areas", "CCCC’s own areas by year, in families that follow a topic across renamings."),
+   ("/trends", "Terms over time", "How often a word or phrase appears in session and paper titles."),
+   ("/conventions", "Conventions, themes and chairs", "Each convention’s dates, site, theme and program chair, with how far the theme reached into titles.")]),
+ ("How is the convention made?", "Formats, groups and the shape of the program.", [
+   ("/calls", "Call and program", "Each year’s call for proposals set beside the program: the call’s distinctive words, and how often they turn up in that year’s titles."),
+   ("/anatomy", "Program anatomy", "Sessions by format over time, and how many people a session lists."),
+   ("/groups", "Groups", "Special interest groups, caucuses, standing groups and consortia, and the years each met.")]),
+ ("Who works with whom?", "Shared sessions, within the ethics thresholds.", [
+   ("/network", "Panel network, teams and bridges", "People linked by sharing sessions, pairs who return together, and how often a session mixes institution types.")]),
+ ("Research desk", "Take the data with you.", [
+   ("/corpus", "Build a corpus", "Choose a slice of the listings and download it, with a citation."),
+   ("/search", "Search", "Names, titles and institutions."),
+   ("/how-to-read", "How to read these numbers", "What is counted, where the series break, and how each measure was made.")])] %}
+{% for q, blurb, items in sections %}<h2>{{ q }}</h2><p class="small">{{ blurb }}</p>
+<ul class="plain">{% for url, name, desc in items %}<li><a href="{{ P }}{{ url }}"><b>{{ name }}</b></a> <span class="small">{{ desc }}</span></li>{% endfor %}</ul>{% endfor %}
+{% endblock %}

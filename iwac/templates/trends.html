@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% block title %}Terms over time · IWAC Program Reader{% endblock %}
+{% block main %}
+<h1>Terms over time</h1>
+<p class="lede">How often a word or phrase appears in session and paper titles, by convention year. Enter up to six, separated by commas. Use <code>*</code> to let a word continue: <code>antiracis*</code> finds antiracism and antiracist.</p>
+<form class="controls" method="get"><input type="text" name="terms" value="{{ raw }}" size="48" placeholder="multimodal, translingual, assessment" aria-label="Terms">
+  <select name="scope" aria-label="Which titles"><option value="all" {{ 'selected' if scope=='all' }}>Session and paper titles</option><option value="sessions" {{ 'selected' if scope=='sessions' }}>Session titles only</option><option value="papers" {{ 'selected' if scope=='papers' }}>Paper titles only</option></select>
+  <button>Plot</button></form>
+{% if series %}
+<div class="controls"><label><input type="radio" name="mode" value="share" checked> per 1,000 titles</label> <label><input type="radio" name="mode" value="raw"> raw counts</label></div>
+<div class="chart"><canvas id="c" role="img" aria-label="Line chart of term frequency by year"></canvas></div>
+<p class="small">Raw counts mostly follow the size of each program, so the default is the number of matching titles per 1,000 titles that year. Shaded bands mark the breaks in the series. Papers are titled in about half of listings, and in different years from session titles, so compare years with care.</p>
+<div class="tbl"><table><thead><tr><th>Year</th><th class="n">Titles</th>{% for s in series %}<th class="n">{{ s.term }}</th>{% endfor %}</tr></thead><tbody>
+{% for y in years if denom.get(y) %}<tr><td>{{ y }}</td><td class="n">{{ denom[y]|num }}</td>
+{% for s in series %}<td class="n">{% if s.counts[y] %}<a href="{{ P }}/titles?term={{ s.term|urlencode }}&year={{ y }}&scope={{ scope }}">{{ s.counts[y] }}</a>{% else %}0{% endif %}</td>{% endfor %}</tr>{% endfor %}
+<tr><th>All years</th><th class="n"></th>{% for s in series %}<th class="n"><a href="{{ P }}/titles?term={{ s.term|urlencode }}&scope={{ scope }}">{{ s.total|num }}</a></th>{% endfor %}</tr>
+</tbody></table></div>
+<div class="caveat">A word in a title is not the concept it names. Open the matching titles before drawing a conclusion: the earliest use of “translingual” in these programs (2007) is a paper about Civil War soldiers' letters, and the field's sense of the word starts in 2011.</div>
+<script src="{{ P }}/static/chart.umd.min.js"></script><script src="{{ P }}/static/chart-defaults.js"></script>
+<script>
+const D = {{ data|safe }};
+const yrs = D.years; const colors = ["#a0522d", "#4f6f8f", "#6b8f4f", "#8a6fb0", "#c08a2a", "#555"];
+const bands = {id: "bands", beforeDatasetsDraw(ch) { const {ctx, chartArea: a, scales: {x}} = ch; if (!x) return; ctx.save();
+  const w = x.getPixelForValue(1) - x.getPixelForValue(0);
+  D.breaks.forEach(b => { const L = x.getPixelForValue(yrs.indexOf(b.from)) - w / 2, R = x.getPixelForValue(yrs.indexOf(b.to)) + w / 2;
+    ctx.fillStyle = b.kind === "gap" ? "rgba(150,140,120,.22)" : b.kind === "source" ? "rgba(79,111,143,.16)" : "rgba(160,80,40,.12)"; ctx.fillRect(L, a.top, R - L, a.bottom - a.top); }); ctx.restore(); }};
+let chart;
+function draw() {
+  const mode = document.querySelector("input[name=mode]:checked").value;
+  const sets = D.series.map((s, i) => ({label: s.term, borderColor: colors[i], backgroundColor: colors[i], tension: 0, pointRadius: 3,
+    data: yrs.map(y => D.denom[y] ? (mode === "share" ? 1000 * (s.counts[y] || 0) / D.denom[y] : (s.counts[y] || 0)) : null)}));
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById("c"), {type: "line", data: {labels: yrs, datasets: sets}, plugins: [bands],
+    options: {maintainAspectRatio: false, scales: {y: {beginAtZero: true, title: {display: true, text: mode === "share" ? "per 1,000 titles" : "titles"}}}}});
+}
+document.querySelectorAll("input[name=mode]").forEach(r => r.addEventListener("change", draw)); draw();
+</script>
+{% endif %}
+{% endblock %}

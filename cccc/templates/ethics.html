@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block title %}Ethics · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>Ethics</h1>
+<p class="lede">Convention programs are public documents. Putting 29 years of them in one place makes something the programs never were: a record of where each person has appeared. These rules limit what the reader does with that.</p>
+<h2>What the reader shows</h2>
+<ul>
+<li><b>Person pages</b> exist only for people listed at two or more conventions. A one-time listing stays on its session page, where the program already put it, and the name is not linked.</li>
+<li><b>“Often listed with”</b> on a person page names only people who shared at least two sessions with them and have three or more listings of their own.</li>
+<li><b>Institution pages</b> name only people who have person pages. Everyone else is counted.</li>
+<li><b>Group measures</b> (first listings, return rates, shares by institution type) are shown for whole conventions or for groups large enough to be summarized, never for a person.</li>
+</ul>
+<h2>What the reader does not do</h2>
+<ul>
+<li>It does not rank, label or score people. It does not say who “left the field,” who has “never published,” or who is “influential.”</li>
+<li>It does not guess gender, race or ethnicity from names.</li>
+<li>It does not publish NCTE's session descriptions.</li>
+<li>Search engines are asked not to index any page.</li>
+</ul>
+<h2>Errors and removal</h2>
+<p>Names are matched by software, and some matches are wrong. A person may appear under two spellings, or two people may share a page. Anyone listed can ask for a correction, a merge or a split, or ask for their page to be removed. A removed page stays removed through rebuilds. The row for a removed person stays in program-level counts because the program printed it, and no page gathers that person's listings.</p>
+<p>To ask, <a href="{{ repo_url }}/issues">open an issue on the repository</a>{% if contact %} or write to {{ contact }}{% endif %}. Please give the name as printed and a year.</p>
+<p>One limit: the dataset is also deposited at Zenodo (<a href="https://doi.org/10.5281/zenodo.23751615">10.5281/zenodo.23751615</a>), and a deposit is a fixed copy that Zenodo keeps. Taking a page down here does not change that copy. If a name needs to come out of the deposit as well, write to the address above: a new version without it can be released, and Zenodo can be asked to withdraw the older one.</p>
+<h2>Using the exports</h2>
+<p>Exports carry names as printed in the public programs. For research about individuals, check with your institution's review board about whether it applies, and do not republish person-level rows without the context on <a href="{{ P }}/how-to-read">how to read</a> page.</p>
+{% endblock %}

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>{% block title %}CCCC Program Reader{% endblock %}</title>
+<link rel="stylesheet" href="{{ P }}/static/tokens.css"><link rel="stylesheet" href="{{ P }}/static/fonts.css"><link rel="stylesheet" href="{{ P }}/static/reader.css">
+<meta name="theme-color" content="#F5EFE1" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#171512" media="(prefers-color-scheme: dark)">
+</head><body>
+<a class="skip" href="#main">Skip to the page</a>
+<header class="site"><div class="bar">
+  <a class="brand" href="{{ P }}/">CCCC Program Reader<small>Who convenes the field, 1998–2027</small></a>
+  <nav aria-label="Main"><a href="{{ ROOT }}">All archives</a><a href="{{ P }}/">Who convenes</a><a href="{{ P }}/tools">Tools</a><a href="{{ P }}/conventions">Conventions</a><a href="{{ P }}/corpus">Corpus</a><a href="{{ P }}/how-to-read">How to read</a><a href="{{ P }}/ethics">Ethics</a><a href="{{ P }}/about">About</a></nav>
+  <form action="{{ P }}/search" style="margin-left:auto"><input type="text" name="q" placeholder="Search names, titles, colleges" aria-label="Search" size="26"></form>
+</div></header>
+<main id="main">{% block main %}{% endblock %}</main>
+<footer>Counts are people <b>listed in the program</b>, not attendees. Data built {{ build_date }}. <a href="{{ P }}/how-to-read">How to read</a> · <a href="{{ data_url }}">Query the data</a> · <a href="{{ repo_url }}">Code and issues</a> · Data <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></footer>
+<script>document.querySelectorAll("th").forEach(function (t) { if (!t.getAttribute("scope")) t.setAttribute("scope", t.closest("thead") ? "col" : "row"); });</script>
+</body></html>

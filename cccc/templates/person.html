@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block title %}{{ p.display_name }} · CCCC Program Reader{% endblock %}
+{% block main %}
+<h1>{{ p.display_name }}</h1>
+<p class="meta">Listed at {{ p.conventions }} conventions, {{ p.first_year }}–{{ p.last_year }}, {{ p.appearances }} listings.
+{% if variants|length > 1 %} Printed as: {% for v in variants %}{{ v.name_as_printed }} ({{ v.n }}){% if not loop.last %}, {% endif %}{% endfor %}.{% endif %}</p>
+{% if p.method == 'exact-name;review' or p.method == 'near-name-reviewed;review' %}<div class="caveat">This name appears at two institutions in one year, or returns to an earlier one. It may be one person or two, and a reviewer has not checked it.</div>
+{% elif p.method and ';moves' in p.method %}<p class="small"><span class="badge">changes of institution</span> This name appears at several institutions in sequence and is read as one person changing jobs.</p>{% endif %}
+{% if p.method and 'near-name' in p.method %}<p class="small"><span class="badge">reviewed</span> Two or more spellings of this name were joined by a reviewer.</p>{% elif p.method and 'reviewed-same' in p.method %}<p class="small"><span class="badge">reviewed</span> A reviewer confirmed this is one person.</p>{% endif %}
+<h2>Career strip</h2>
+<svg viewBox="0 0 {{ strip.w }} 92" width="100%" role="img" aria-label="Years in which this person was listed, by role" style="max-width:{{ strip.w }}px;background:var(--paper);border:1px solid var(--rule)">
+  <rect x="{{ strip.gap[0] }}" y="6" width="{{ strip.gap[1] - strip.gap[0] }}" height="62" fill="rgba(150,140,120,.2)"/>
+  {% for t in strip.ticks %}<text x="{{ t.x }}" y="84" font-size="9" text-anchor="middle" fill="currentColor">{{ t.y }}</text>{% endfor %}
+  {% for m in strip.marks %}<circle cx="{{ m.x }}" cy="{{ m.y }}" r="{{ 4 + (m.n - 1) if m.n < 4 else 7 }}" fill="{{ colors.get(m.role, '#999') }}"><title>{{ m.year }}: {{ m.role }} ({{ m.n }})</title></circle>{% endfor %}
+</svg>
+<p class="legend small">{% for k,c in colors.items() %}<span><i style="background:{{ c }}"></i>{{ k }}</span>{% endfor %} <span>Grey band: 2000–2003, not in the corpus.</span></p>
+<h2>Listings</h2>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Session</th><th>Role</th><th>Affiliation as printed</th></tr></thead><tbody>
+{% for r in rows %}<tr><td>{{ r.year }}</td><td><a href="{{ P }}/session/{{ r.session_id }}">{{ r.stitle or r.code }}</a>{% if r.paper_title %}<br><span class="small">“{{ r.paper_title }}”</span>{% endif %}</td><td>{{ r.role or '' }}</td>
+<td>{{ r.affiliation_as_printed or '' }}{% if r.institution_id %} <a class="small" href="{{ P }}/institution/{{ r.institution_id }}">→ {{ r.inst_name }}</a>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>
+{% if co %}<h2>Often listed with</h2>
+<p class="small">People who shared at least two sessions with this person and have three or more listings of their own.</p>
+<ul class="plain">{% for c in co %}<li><a href="{{ P }}/person/{{ c.person_id }}">{{ c.display_name }}</a> <span class="small">{{ c.shared }} sessions, {{ c.y0 }}–{{ c.y1 }}</span></li>{% endfor %}</ul>{% endif %}
+<p class="small">This page describes where a name appears in the printed programs. It makes no judgment about a career. To correct a match or ask for the page to be removed, <a href="{{ P }}/ethics">see the ethics page</a>.</p>
+{% endblock %}
