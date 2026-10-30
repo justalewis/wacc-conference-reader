@@ -1,18 +1,22 @@
-"""Smoke test: every page of both readers answers, and every internal link carries its prefix.  python test_smoke.py"""
+"""Smoke test: every page of all three readers answers, and every internal link carries its prefix.  python test_smoke.py"""
 import re, sqlite3
 from werkzeug.test import Client
 import wsgi
 
 c = Client(wsgi.application)
+w = sqlite3.connect("data/cw.db")
+cpid = w.execute("select person_id from person_summary where eligible=1 order by conventions desc limit 1").fetchone()[0]
 d = sqlite3.connect("data/iwac.db")
 pid = d.execute("select person_id from person_summary where eligible=1 order by conventions desc limit 1").fetchone()[0]
 paths = ["/", "/cccc/", "/cccc/tools", "/cccc/year/2005", "/cccc/atlas?year=2005", "/iwac/", "/iwac/tools", "/iwac/conventions", "/iwac/year/2025", "/iwac/institutions",
-         "/iwac/areas", "/iwac/network", "/iwac/network?era=2012%E2%80%932016", "/iwac/formats", "/iwac/atlas?year=2025", "/iwac/trends?terms=transfer,assessment", "/iwac/corpus?q=assessment", "/iwac/search?q=writing", "/iwac/how-to-read", f"/iwac/person/{pid}"]
+         "/iwac/areas", "/iwac/network", "/iwac/network?era=2012%E2%80%932016", "/iwac/formats", "/iwac/atlas?year=2025", "/iwac/trends?terms=transfer,assessment", "/iwac/corpus?q=assessment", "/iwac/search?q=writing", "/iwac/how-to-read", f"/iwac/person/{pid}",
+         "/cw/", "/cw/tools", "/cw/conventions", "/cw/year/1998", "/cw/year/2015", "/cw/institutions", "/cw/network", "/cw/network?era=2000%E2%80%932009", "/cw/formats", "/cw/atlas",
+         "/cw/trends?terms=hypertext,assessment", "/cw/corpus?q=hypertext", "/cw/search?q=writing", "/cw/how-to-read", "/cw/ethics", f"/cw/person/{cpid}"]
 bad = 0
 for p in paths:
     r = c.get(p)
     body = r.get_data(as_text=True)
-    prefix = "/iwac" if p.startswith("/iwac") else "/cccc" if p.startswith("/cccc") else ""
+    prefix = "/iwac" if p.startswith("/iwac") else "/cccc" if p.startswith("/cccc") else "/cw" if p.startswith("/cw") else ""
     off = [l for l in re.findall(r'(?:href|src|action)="(/[^"]*)"', body) if prefix and not (l.startswith(prefix) or l == "/")]
     if r.status_code != 200 or off:
         bad += 1

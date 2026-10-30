@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block title %}Tools · Computers and Writing Program Reader{% endblock %}
+{% block main %}
+<h1>Tools</h1>
+<p class="lede">Each tool asks one question of the Computers and Writing Conference programs, 1984 to 2019. Every page says what it can and cannot show.</p>
+{% set sections = [
+ ("Who is on the program?", "Counts of people listed, never attendance.", [
+   ("/", "Census by year", "People listed, newcomers, institutions and concentration by conference."),
+   ("/institutions", "Institutions", "Every institution a printed affiliation matched, ranked, with its listings by year."),
+   ("/atlas", "Atlas", "A world map of the institutions listed in each program, and which countries they were in."),
+   ("/network", "Panel network", "Who shared sessions with whom, in three windows, and the pairs who return together."),
+   ("/search", "Search", "Names, titles and institutions.")]),
+ ("What was the conference about?", "Titles, formats and sites as printed.", [
+   ("/trends", "Terms over time", "How often a word or phrase appears in session and paper titles."),
+   ("/formats", "Formats and roles", "Session formats and the roles listed, by year."),
+   ("/conventions", "Conferences", "Each conference's site and notes on how it was read.")]),
+ ("Take the data", "A citable slice, with its address.", [
+   ("/corpus", "Build a corpus", "Choose a slice of the listings and download it, with a citation."),
+   ("/how-to-read", "How to read these numbers", "What is counted, where the series break, and how each year was read.")])] %}
+{% for q, blurb, items in sections %}<h2>{{ q }}</h2><p class="small">{{ blurb }}</p>
+<ul class="plain">{% for url, name, desc in items %}<li><a href="{{ P }}{{ url }}"><b>{{ name }}</b></a> <span class="small">{{ desc }}</span></li>{% endfor %}</ul>{% endfor %}
+<p class="small">Not built for Computers and Writing: areas, groups, calls and area by institution type. The programs print no areas, the conference has no standing groups, and its calls are not in the corpus.</p>
+{% endblock %}

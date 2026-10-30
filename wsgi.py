@@ -1,7 +1,7 @@
 """WAC Clearinghouse conference archives: a selector at / and one reader per conference archive.
 
 Run: python -m flask --app wsgi run   (or waitress-serve --listen=127.0.0.1:8080 wsgi:application)
-/cccc and /iwac are separate Flask apps mounted under their own prefixes (each page links with request.script_root).
+/cccc, /iwac and /cw are separate Flask apps mounted under their own prefixes (each page links with request.script_root).
 """
 import importlib.util, os, sys
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
@@ -56,10 +56,15 @@ if os.path.exists(os.path.join(HERE, "data", "iwac.db")):
     CORPORA["iwac"] = {"name": "International WAC Conference programs", "short": "IWAC", "url": "/iwac/", "sessions": s, "people": p, "years": yrs, "conferences": n,
                        "blurb": "The International Writing Across the Curriculum Conference, from the programs the Clearinghouse hosts.",
                        "caveat": "A draft: 2002 is an OCR'd scan, and 2008 and 2016 have known weak spots."}
+if os.path.exists(os.path.join(HERE, "data", "cw.db")):
+    s, p, yrs, n = stats("cw.db", "select min(year), max(year) from census", None)
+    CORPORA["cw"] = {"name": "Computers and Writing conference programs", "short": "Computers and Writing", "url": "/cw/", "sessions": s, "people": p, "years": yrs, "conferences": n,
+                     "blurb": "The Computers and Writing Conference, from the program PDFs in Are We There Yet? (Computers and Composition Digital Press).",
+                     "caveat": "A draft: 1987 to 1988, 1991 to 1994 and 2016 to 2017 are missing, 1997, 2007, 2008 and 2012 are weak scans, and six years print few or no institutions."}
 CORPORA = list(CORPORA.values())
 
 mounts = {}
-for key in ("cccc", "iwac"):
+for key in ("cccc", "iwac", "cw"):
     p = os.path.join(HERE, key, "app.py")
     if os.path.exists(p):
         mounts["/" + key] = load(key)

@@ -3,4 +3,5 @@ __pycache__
 server.log
 test_smoke.py
 build_iwac.py
+build_cw.py
 .git

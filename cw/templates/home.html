@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% block title %}Who convenes the field · Computers and Writing Program Reader{% endblock %}
+{% block main %}
+<h1>Who convenes the field?</h1>
+<p class="lede">Each Computers and Writing program lists the people the conference put on its stages: who chaired, who presented, who responded, and from which institutions. This page counts them, conference by conference, for the 28 programs in the corpus, 1984 to 2019.</p>
+<div class="caveat">These are people <b>listed in the program</b>, not registrants or attendees. Programs are missing for 1982 to 1983, 1987 to 1988, 1991 to 1994 and 2016 to 2017, several years are OCR'd scans, and 1999, 2001, 2002, 2006, 2018 and 2019 print few or no institutions. Shaded bands on the chart mark those breaks. <a href="{{ P }}/how-to-read">How to read these numbers</a>.</div>
+<div class="facts">
+  <div class="fact"><b>{{ rows|sum(attribute='sessions')|num }}</b><span>sessions</span></div>
+  <div class="fact"><b>{{ rows|sum(attribute='appearances')|num }}</b><span>listings of a person in a session</span></div>
+  <div class="fact"><b>{{ rows|length }}</b><span>conferences in the corpus</span></div>
+</div>
+<div class="controls"><label>Measure <select id="metric">{% for k,l,t in metrics %}<option value="{{ k }}">{{ l }}</option>{% endfor %}</select></label>
+  <label><input type="checkbox" id="join"> join the line across the gaps</label></div>
+<div class="chart"><canvas id="c" role="img" aria-label="Line chart of the chosen measure by convention year"></canvas></div>
+<p class="small" id="note"></p>
+<h2>By year</h2>
+<p class="small">Each year opens that conference's program. Institutions are matched by their printed form to the ones the CCCC and IWAC readers already hold; the share outside the US uses listings whose institution matched, and is blank where a program prints none.</p>
+<div class="tbl"><table><thead><tr><th>Year</th><th>City</th><th class="n">Sessions</th><th class="n">People</th><th class="n">First listed</th><th class="n">Outside US</th><th class="n">Top 10 share</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><a href="{{ P }}/year/{{ r.year }}">{{ r.year }}</a>{% if r.status in ('cancelled','virtual','upcoming') %} <span class="badge">{{ r.status }}</span>{% endif %}</td><td>{{ r.city }}</td>
+<td class="n">{{ r.sessions|num }}</td><td class="n">{{ r.people|num }}</td><td class="n">{{ r.newcomer_share|pct(0) }}</td><td class="n">{{ r.non_us_share|pct }}</td><td class="n">{{ r.top10_share|pct(0) }}</td></tr>{% endfor %}
+</tbody></table></div>
+<p class="small">“First listed” counts people whose first listing in this corpus is that year, so early years run high. Names are joined only on an exact match; no reviewed merges have been made for Computers and Writing yet.</p>
+<script src="{{ P }}/static/chart.umd.min.js"></script><script src="{{ P }}/static/chart-defaults.js"></script>
+<script>
+const D = {{ data|safe }};
+const yrs = D.years;
+const byYear = {}; D.rows.forEach(r => byYear[r.year] = r);
+const bands = {id: "bands", beforeDatasetsDraw(ch) {
+  const {ctx, chartArea: a, scales: {x}} = ch; if (!x) return; ctx.save();
+  const w = x.getPixelForValue(1) - x.getPixelForValue(0);
+  D.breaks.filter(b => yrs.indexOf(b.from) >= 0).forEach(b => { const L = x.getPixelForValue(yrs.indexOf(b.from)) - w / 2, R = x.getPixelForValue(yrs.indexOf(b.to)) + w / 2;
+    ctx.fillStyle = b.kind === "gap" ? "rgba(150,140,120,.22)" : b.kind === "source" ? "rgba(79,111,143,.16)" : "rgba(160,80,40,.12)";
+    ctx.fillRect(L, a.top, R - L, a.bottom - a.top); });
+  ctx.restore(); }};
+let chart;
+function draw() {
+  const m = document.getElementById("metric").value, meta = D.metrics.find(t => t[0] === m), kind = meta[2];
+  const vals = yrs.map(y => byYear[y] ? byYear[y][m] : null);
+  const join = document.getElementById("join").checked;
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById("c"), {type: "line", plugins: [bands],
+    data: {labels: yrs, datasets: [{label: meta[1], data: vals, borderColor: "#a0522d", backgroundColor: "#a0522d", pointRadius: 3, spanGaps: join, tension: 0}]},
+    options: {maintainAspectRatio: false, plugins: {legend: {display: false}, tooltip: {callbacks: {afterBody: items => { const r = byYear[yrs[items[0].dataIndex]]; return r && r.theme ? ["Theme: " + r.theme].concat(r.chair ? ["Program chair: " + r.chair] : []) : []; }, label: c => c.raw == null ? "no data" : (kind === "share" ? (c.raw * 100).toFixed(1) + "%" : kind === "index" ? c.raw.toFixed(3) : c.raw.toLocaleString())}}},
+      scales: {y: {beginAtZero: true, ticks: {callback: v => kind === "share" ? Math.round(v * 100) + "%" : v}}},
+      onClick: (e, els) => { if (els.length) location.href = "{{ P }}/year/" + yrs[els[0].index]; }}});
+  document.getElementById("note").textContent = D.breaks.map(b => b.label).join(" · ") + ". Click a point to open that year.";
+}
+document.getElementById("metric").addEventListener("change", draw); document.getElementById("join").addEventListener("change", draw); draw();
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block title %}How to read · Computers and Writing Program Reader{% endblock %}
+{% block main %}
+<h1>How to read these numbers</h1>
+<p class="lede">The reader counts what the printed programs list. It does not count who attended, and it cannot see changes made after the program was printed.</p>
+<h2>What is counted</h2>
+<ul>
+<li>A <b>listing</b> is one person in one role in one session.</li>
+<li><b>People</b> are names joined on an exact match. The Computers and Writing corpus has had no reviewed merges, so one person printed with two spellings counts twice.</li>
+<li>An institution is <b>matched</b> when the printed affiliation is identical to one the CCCC or IWAC reader already matched. The share outside the US uses only matched institutions.</li>
+<li>A person page exists only for people listed at two or more conferences. The 1985, 1997, 2007, 2008 and 2012 programs do not count toward that, because they are OCR'd scans with heavy recognition noise.</li>
+</ul>
+<h2>Where the series break</h2>
+<ul>{% for b in breaks %}<li>{{ b.label }}</li>{% endfor %}</ul>
+<h2>How each year was read</h2>
+<dl>{% for y, n in notes %}<dt><a href="{{ P }}/year/{{ y }}">{{ y }}</a></dt><dd>{{ n }}</dd>{% endfor %}</dl>
+<h2>Caveats</h2>
+<p>This is a draft built from the program PDFs in <i>Are We There Yet?</i> (Marlow and Purdy, Computers and Composition Digital Press). The programs print no names for some sessions' participants and no institutions for some years, and a name that carries no institution (2001, 2006, 2018, 2019) is joined to others only by spelling, so common names may be joined wrongly. Abstracts are in the source programs but are not shown here. Check any figure you plan to publish against the session pages.</p>
+{% endblock %}
