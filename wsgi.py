@@ -1,7 +1,7 @@
 """WAC Clearinghouse conference archives: a selector at / and one reader per conference archive.
 
 Run: python -m flask --app wsgi run   (or waitress-serve --listen=127.0.0.1:8080 wsgi:application)
-/cccc, /iwac and /cw are separate Flask apps mounted under their own prefixes (each page links with request.script_root).
+/cccc, /iwac, /cw, /cptsc and /ccw are separate Flask apps mounted under their own prefixes (each page links with request.script_root).
 """
 import importlib.util, os, sys
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
@@ -59,12 +59,22 @@ if os.path.exists(os.path.join(HERE, "data", "iwac.db")):
 if os.path.exists(os.path.join(HERE, "data", "cw.db")):
     s, p, yrs, n = stats("cw.db", "select min(year), max(year) from census", None)
     CORPORA["cw"] = {"name": "Computers and Writing conference programs", "short": "Computers and Writing", "url": "/cw/", "sessions": s, "people": p, "years": yrs, "conferences": n,
-                     "blurb": "The Computers and Writing Conference, from the program PDFs in Are We There Yet? (Computers and Composition Digital Press).",
-                     "caveat": "A draft: 1987 to 1988, 1991 to 1994 and 2016 to 2017 are missing, 1997, 2007, 2008 and 2012 are weak scans, and six years print few or no institutions."}
+                     "blurb": "The Computers and Writing Conference, from the program PDFs in Are We There Yet? (Computers and Composition Digital Press), and for 2022 to 2024 from programs the organizers supplied.",
+                     "caveat": "A draft: 1987 to 1988, 1991 to 1994, 2016 to 2017 and 2020 to 2021 are missing, 1997, 2007, 2008 and 2012 are weak scans, seven years print few or no institutions, and the 2024 schedule names almost no one."}
+if os.path.exists(os.path.join(HERE, "data", "cptsc.db")):
+    s, p, yrs, n = stats("cptsc.db", "select min(year), max(year) from census", None)
+    CORPORA["cptsc"] = {"name": "CPTSC conference proceedings", "short": "CPTSC", "url": "/cptsc/", "sessions": s, "people": p, "years": yrs, "conferences": n,
+                        "blurb": "The annual meeting of the Council for Programs in Technical and Scientific Communication, from the proceedings volumes on cptsc.org.",
+                        "caveat": "A draft: 1976 and 2020 are missing, 2016 was cancelled but its proceedings were published, the volumes through 2004 are scans read by OCR and checked by hand, and 1989 is an agenda."}
+if os.path.exists(os.path.join(HERE, "data", "ccw.db")):
+    s, p, yrs, n = stats("ccw.db", "select min(year), max(year) from census", None)
+    CORPORA["ccw"] = {"name": "Conference on Community Writing programs", "short": "Community Writing", "url": "/ccw/", "sessions": s, "people": p, "years": yrs, "conferences": n,
+                      "blurb": "The Conference on Community Writing, from the programs the Coalition for Community Writing published: two PDFs, a schedule page and two public program documents.",
+                      "caveat": "A draft: the conference meets in odd years, 2025 is only its public DeepThink Tank listing and one keynote, and the 2019 and 2021 programs print some chairs and speakers without institutions."}
 CORPORA = list(CORPORA.values())
 
 mounts = {}
-for key in ("cccc", "iwac", "cw"):
+for key in ("cccc", "iwac", "cw", "cptsc", "ccw"):
     p = os.path.join(HERE, key, "app.py")
     if os.path.exists(p):
         mounts["/" + key] = load(key)

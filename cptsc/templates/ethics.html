@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Ethics · CPTSC Program Reader{% endblock %}
+{% block main %}
+<h1>Ethics</h1>
+<p class="lede">The proceedings are public documents on cptsc.org, and the reader shows only what they print. It still sets limits on how names are used.</p>
+<ul>
+<li><b>Person pages</b> exist only for people listed at two or more meetings, not counting 1999. A name that appears once is on its session page and nowhere else.</li>
+<li><b>Rights.</b> The cptsc.org site states no license for the volumes. This is a draft, and permission for reuse is being sought from CPTSC.</li>
+<li><b>No ranking.</b> The reader never scores or ranks a person, and it shows no attendance.</li>
+<li><b>No search indexing.</b> Every page asks search engines not to index it.</li>
+<li><b>Papers and abstracts</b> are in the source volumes but are not shown, republished or exported. The reader holds titles, names and institutions only.</li>
+<li><b>Errors</b> are likely, especially in the scanned volumes read by OCR (1974 to 2004), above all 1999 (see how to read). A name can be wrong or split in two.</li>
+</ul>
+<p>To correct a match or ask that a page be removed, {% if contact %}write to {{ contact }}.{% else %}use the contact CPTSC and the archive publish (to be added before launch).{% endif %}</p>
+{% endblock %}

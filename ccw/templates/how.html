@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block title %}How to read · Community Writing Program Reader{% endblock %}
+{% block main %}
+<h1>How to read these numbers</h1>
+<p class="lede">The reader counts what the printed programs list. It does not count who attended, and it cannot see changes made after the program was printed.</p>
+<h2>What is counted</h2>
+<ul>
+<li>A <b>listing</b> is one person in one role in one session.</li>
+<li><b>People</b> are names joined on an exact match. The Community Writing corpus has had no reviewed merges, so one person printed with two spellings counts twice.</li>
+<li>An institution is <b>matched</b> when the printed affiliation is identical to one another reader in this archive already matched. The share outside the US uses only matched institutions.</li>
+<li>A person page exists only for people listed at two or more conferences.</li>
+</ul>
+<h2>Where the series break</h2>
+<ul>{% for l in breaks|map(attribute='label')|unique %}<li>{{ l }}</li>{% endfor %}</ul>
+<h2>How each year was read</h2>
+<dl>{% for y, n in notes %}<dt><a href="{{ P }}/year/{{ y }}">{{ y }}</a></dt><dd>{{ n }}</dd>{% endfor %}</dl>
+<h2>Caveats</h2>
+<p>This is a draft built from the programs the Coalition for Community Writing published: two PDFs, one web page and two Google Docs, plus the public part of the 2025 listing. The 2019 and 2021 documents print some chairs and presenters without an institution, and a name printed without one (the Makerthon in 2017, the keynotes) is joined to others only by spelling, so common names may be joined wrongly. Abstracts and descriptions are not kept. Check any figure you plan to publish against the session pages.</p>
+{% endblock %}

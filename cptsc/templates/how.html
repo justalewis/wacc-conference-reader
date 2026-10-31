@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}How to read · CPTSC Program Reader{% endblock %}
+{% block main %}
+<h1>How to read these numbers</h1>
+<p class="lede">The reader counts what the printed proceedings list. It does not count who attended, and it cannot see changes made after a volume was printed.</p>
+<h2>What is counted</h2>
+<ul>
+<li>A <b>listing</b> is one person in one role in one session.</li>
+<li>A <b>volume</b> is one year's proceedings. Some print full papers, some a program or schedule only, some an abstract book. The 1989 volume is an agenda with workshop facilitators listed as roles. A session marked as program-only is on the printed program but has no paper in the volume.</li>
+<li><b>People</b> are names joined on an exact match. The CPTSC corpus has had no reviewed merges, so one person printed with two spellings counts twice.</li>
+<li>An institution is <b>matched</b> when the printed affiliation is identical to one the CCCC, IWAC or Computers and Writing reader already matched. CPTSC institutions were not run through ROR themselves. The share outside the US uses only matched institutions.</li>
+<li>A person page exists only for people listed at two or more meetings. The 1999 volume does not count toward that, because it is the noisiest OCR scan. The other scanned volumes (1974 to 2004) were read by OCR and checked by hand against their contents, and they do count.</li>
+</ul>
+<h2>Where the series break</h2>
+<ul>{% for b in breaks %}<li>{{ b.label }}</li>{% endfor %}</ul>
+<h2>How each year was read</h2>
+<dl>{% for y, n in notes %}<dt><a href="{{ P }}/year/{{ y }}">{{ y }}</a></dt><dd>{{ n }}</dd>{% endfor %}</dl>
+<h2>Caveats</h2>
+<p>This is a draft built from the proceedings PDFs on cptsc.org, which state no license. Permission for reuse is being sought from CPTSC. Some volumes print no moderators (1997 to 2001, 2004), some print no institution for part of their listings (2009 is missing a third), and a name that carries no institution is joined to others only by spelling, so common names may be joined wrongly. The papers' texts and abstracts are not shown or republished here. Check any figure you plan to publish against the session pages.</p>
+{% endblock %}

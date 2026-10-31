@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Conferences · Community Writing Program Reader{% endblock %}
+{% block main %}
+<h1>Conferences, cities and themes</h1>
+<p class="lede">The six editions of the Conference on Community Writing in the corpus, 2015 to 2025, with the host and theme printed in each program and what the program lets us read.</p>
+<div class="caveat">The conference meets in odd years, so there are no even-year editions. The 2021 edition was held online; the Coalition's own menu lists it under Washington, D.C. Each program was read by a parser written for that year's layout, so the notes below say where the reading is weak. A site is blank where the program does not print one.</div>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Site</th><th>Notes</th><th class="n">Sessions</th><th class="n">People</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><a href="{{ P }}/year/{{ r.year }}">{{ r.year }}</a>{% if r.status in ('cancelled','virtual','upcoming') %} <span class="badge">{{ r.status }}</span>{% endif %}</td>
+<td>{{ r.city or '' }}</td><td class="small">{{ r.theme or '' }}{% if notes.get(r.year) %}<br>{{ notes[r.year] }}{% endif %}</td><td class="n">{{ r.sessions|num }}</td><td class="n">{{ r.people|num }}</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

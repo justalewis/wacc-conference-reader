@@ -17,8 +17,8 @@
 <h2>Roles</h2><ul class="plain">{% for r in roles %}<li>{{ r.role_group or 'other' }}: {{ r.n|num }}</li>{% endfor %}</ul>
 {% if area_rows %}<h2>Proposal areas</h2><ul class="plain">{% for a in area_rows %}<li><a href="{{ P }}/area/{{ a.area|urlencode }}">{{ a.area }}</a>: {{ a.n|num }}</li>{% endfor %}</ul><p class="small">As the program printed them. <a href="{{ P }}/areas">How the areas changed over time</a>.</p>{% endif %}
 {% if countries %}<h2>Countries of listed institutions</h2><ul class="plain">{% for k in countries %}<li>{{ k.country }}: {{ k.n|num }}</li>{% endfor %}</ul>{% endif %}
-<h2>Source files</h2><ul class="plain">{% for d in docs %}<li class="small">{% if d.public_url %}<a href="{{ d.public_url }}">{{ d.url.split('__')[-1] if d.kind == 'pdf' else d.url[-40:] }}</a>{% else %}{{ d.url }}{% endif %}</li>{% endfor %}</ul>
-<p class="small">Links go to the program as the WAC Clearinghouse hosts it, where one exists.</p>
+<h2>Source files</h2><ul class="plain">{% for d in docs %}<li class="small">{% if d.public_url %}<a href="{{ d.public_url }}">{{ d.url.split('__')[-1] if d.kind == 'pdf' else d.url[-40:] }}</a>{% elif d.url %}{{ d.url }}{% else %}Program supplied by the conference organizers; no public source{% endif %}</li>{% endfor %}</ul>
+<p class="small">Links go to the program as the WAC Clearinghouse hosts it, where one exists. The 2022 to 2024 programs have no public link.</p>
 </div><div>
 <h2>Most-listed institutions</h2>
 <div class="tbl"><table><thead><tr><th>Institution</th><th class="n">Listings</th><th class="n">People</th></tr></thead><tbody>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}{% block title %}{{ y }} · Community Writing Program Reader{% endblock %}
+{% block main %}
+<p class="small">{% if prev %}<a href="{{ P }}/year/{{ prev }}">← {{ prev }}</a>{% endif %}{% if prev and next %} · {% endif %}{% if next %}<a href="{{ P }}/year/{{ next }}">{{ next }} →</a>{% endif %}</p>
+<h1>{{ y }}{% if conv and conv.city %} · {{ conv.city }}{% endif %}{% if c.status in ('cancelled','virtual','upcoming') %} <span class="badge warn">{{ c.status }}</span>{% endif %}</h1>
+{% if conv %}<p class="meta">{% if conv.dates %}{{ conv.dates }}{% endif %}{% if conv.site and conv.site != conv.city %} · {{ conv.site }}{% endif %}{% if conv.chair %}{% endif %}</p>
+{% if conv.theme %}<p class="lede">Theme: {{ conv.theme }}</p>{% endif %}
+{% if false %}<p class="small">{{ echo.n }} of this year's {{ echo.titles|num }} session and paper titles ({{ echo.this|pct }}) use a word from the theme ({{ echo.words|join(', ') }}). In other years the same words appear in {{ echo.other|pct }} of titles. <a href="{{ P }}/conventions">All themes</a>.</p>{% endif %}{% endif %}
+{% if note %}<div class="caveat"><b>About this year's source.</b> {{ note }}</div>{% endif %}
+<div class="facts">
+  <div class="fact"><b>{{ c.sessions|num }}</b><span>sessions</span></div>
+  <div class="fact"><b>{{ c.people|num }}</b><span>people listed</span></div>
+  <div class="fact"><b>{{ c.newcomer_share|pct(0) if c.newcomer_share is not none else '–' }}</b><span>first listed in this corpus</span></div>
+  <div class="fact"><b>{{ c.non_us_share|pct }}</b><span>at institutions outside the US</span></div>
+  <div class="fact"><b>{{ c.top10_share|pct(0) }}</b><span>of listings from ten institutions</span></div>
+</div>
+<div class="cols"><div>
+<h2>Roles</h2><ul class="plain">{% for r in roles %}<li>{{ r.role_group or 'other' }}: {{ r.n|num }}</li>{% endfor %}</ul>
+{% if area_rows %}<h2>Proposal areas</h2><ul class="plain">{% for a in area_rows %}<li><a href="{{ P }}/area/{{ a.area|urlencode }}">{{ a.area }}</a>: {{ a.n|num }}</li>{% endfor %}</ul><p class="small">As the program printed them. <a href="{{ P }}/areas">How the areas changed over time</a>.</p>{% endif %}
+{% if countries %}<h2>Countries of listed institutions</h2><ul class="plain">{% for k in countries %}<li>{{ k.country }}: {{ k.n|num }}</li>{% endfor %}</ul>{% endif %}
+<h2>Source files</h2><ul class="plain">{% for d in docs %}<li class="small">{% if d.public_url %}<a href="{{ d.public_url }}">{{ d.url.split('__')[-1] if d.kind == 'pdf' else d.url[-40:] }}</a>{% else %}{{ d.url }}{% endif %}</li>{% endfor %}</ul>
+<p class="small">Links go to the program as the Coalition for Community Writing published it.</p>
+</div><div>
+<h2>Most-listed institutions</h2>
+<div class="tbl"><table><thead><tr><th>Institution</th><th class="n">Listings</th><th class="n">People</th></tr></thead><tbody>
+{% for t in top %}<tr><td><a href="{{ P }}/institution/{{ t.id }}">{{ t.name }}</a>{% if t.country %} <span class="small">{{ t.country }}</span>{% endif %}</td><td class="n">{{ t.appearances }}</td><td class="n">{{ t.people }}</td></tr>{% endfor %}
+</tbody></table></div></div></div>
+<h2>Sessions ({{ sessions|length|num }})</h2>
+<div class="tbl"><table><thead><tr><th>Code</th><th>Title</th><th>Format</th><th class="n">People</th></tr></thead><tbody>
+{% for s in sessions %}<tr><td>{{ s.code or '' }}</td><td><a href="{{ P }}/session/{{ s.id }}">{{ s.title or '(no title)' }}</a>{% if s.tracks %}<br><span class="small">{{ s.tracks }}</span>{% endif %}</td><td>{{ s.session_type or '' }}</td><td class="n">{{ s.n }}</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

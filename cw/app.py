@@ -13,14 +13,17 @@ SITE_URL = os.environ.get("READER_URL", "http://localhost:8080/cw")
 REPO_URL = os.environ.get("REPO_URL", "")
 DATA_URL = os.environ.get("DATA_URL", "")
 MAX_EXPORT = 100_000
-YEARS = list(range(1984, 2020))
+YEARS = list(range(1984, 2025))
 
 BREAKS = [
     {"from": 1987, "to": 1988, "label": "1987 and 1988: no program in the corpus", "kind": "gap"},
     {"from": 1991, "to": 1994, "label": "1991 to 1994: no program in the corpus", "kind": "gap"},
     {"from": 2016, "to": 2017, "label": "2016 and 2017: programs are at the WAC Clearinghouse, not in this corpus", "kind": "gap"},
+    {"from": 2020, "to": 2021, "label": "2020 and 2021: no program in the corpus", "kind": "gap"},
     {"from": 2007, "to": 2008, "label": "2007 and 2008: OCR of scanned programs, low confidence", "kind": "source"},
     {"from": 2018, "to": 2019, "label": "2018 and 2019: the programs print names without institutions", "kind": "source"},
+    {"from": 2022, "to": 2022, "label": "2022: the program prints names without institutions", "kind": "source"},
+    {"from": 2024, "to": 2024, "label": "2024: the schedule names no one for its concurrent sessions, only the opening town hall and the keynotes", "kind": "source"},
 ]
 
 YEAR_NOTES = {
@@ -50,6 +53,9 @@ YEAR_NOTES = {
     2014: "Paper titles and presenter lines are separate lists, so a few sessions have no paper-to-person pairing. The Thursday workshops are not included.",
     2018: "The program prints names only, with no institutions. Poster presentations are one merged session.",
     2019: "The program prints names only, with no institutions and no chairs. Poster presentations are one merged session.",
+    2022: "This program came from the conference organizers, not the Digital Press book. It prints names only, with no institutions and no chairs, so every listing here has no institution. The keynote's institution appears only in his biography and is not taken from it.",
+    2023: "This program came from the conference organizers, not the Digital Press book. It prints no chairs, and the program prints no city or host institution. Session codes A.07, E.05, F.04, G.01, H.04, AS.21 and AS.23 are not printed. Asynchronous sessions have no time or room.",
+    2024: "This schedule came from the conference organizers, not the Digital Press book. It lists each session's time, room and title but names no presenters for the concurrent sessions, so only the opening town hall panelists and the two keynote speakers appear as people. The schedule prints no session codes, so the codes here (A-01 and so on) are local identifiers, not citations.",
 }
 
 app = Flask(__name__, root_path=HERE)
@@ -301,7 +307,7 @@ def search():
 def atlas():
     years = [r["year"] for r in q("SELECT DISTINCT year FROM inst_year ORDER BY year")]
     y = request.args.get("year", type=int)
-    y = y if y in years else max(r["year"] for r in q("SELECT year FROM census WHERE matched > 0"))
+    y = y if y in years else max(r["year"] for r in q("SELECT year FROM census WHERE matched >= 50"))   # latest year with a usable number of matched institutions (2024 has 8)
     pts = [dict(r) for r in q("""SELECT i.id, i.name, i.country, i.lat, i.lon, iy.appearances n, iy.people p FROM inst_year iy
                                  JOIN institutions i ON i.id = iy.institution_id WHERE iy.year = ? AND i.lat IS NOT NULL""", y)]
     tot = q1("SELECT count(*) n FROM appearances WHERE year = ?", y)["n"]
@@ -389,7 +395,7 @@ def corpus_rows(args, limit):
 def corpus_label(args):
     bits = []
     if args.get("q"): bits.append(f'titles containing "{args["q"]}"')
-    if args.get("y0") or args.get("y1"): bits.append(f'{args.get("y0") or "1984"}–{args.get("y1") or "2019"}')
+    if args.get("y0") or args.get("y1"): bits.append(f'{args.get("y0") or "1984"}–{args.get("y1") or "2024"}')
     if args.get("role"): bits.append(f'role: {args["role"]}')
     if args.get("inst"): bits.append(f'institution contains "{args["inst"]}"')
     if args.get("non_us") == "1": bits.append("outside the US")
@@ -414,7 +420,7 @@ def export(fmt):
     label = corpus_label(request.args)
     if fmt == "json":
         body = json.dumps({"corpus": {"filters": label, "listings": len(rows), "built": build_date(), "source": SITE_URL,
-                                      "note": "People listed in the program, not attendees. Draft: rights for reuse are pending with the Computers and Composition Digital Press."}, "rows": rows}, ensure_ascii=False)
+                                      "note": "People listed in the program, not attendees. Draft: rights for reuse are pending with the Computers and Composition Digital Press (programs through 2019) and the conference organizers (2022 to 2024)."}, "rows": rows}, ensure_ascii=False)
         return Response(body, mimetype="application/json")
     buf = io.StringIO()
     w = csv.DictWriter(buf, fieldnames=list(rows[0].keys()) if rows else ["year"])
@@ -422,7 +428,7 @@ def export(fmt):
     return Response("﻿" + buf.getvalue(), mimetype="text/csv", headers={"Content-Disposition": "attachment; filename=iwac-corpus.csv"})
 
 
-ERAS = {"1984–1999": (1984, 1999), "2000–2009": (2000, 2009), "2010–2019": (2010, 2019)}
+ERAS = {"1984–1999": (1984, 1999), "2000–2009": (2000, 2009), "2010–2019": (2010, 2019), "2020–2024": (2020, 2024)}
 MIN_SHARED = 2
 _NET = {}
 

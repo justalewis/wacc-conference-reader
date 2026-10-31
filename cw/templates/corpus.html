@@ -4,8 +4,8 @@
 <p class="lede">Choose a slice of the listings, see how many it holds, and download it with a citation. The address of this page is the corpus: send it to someone and they get the same slice of the same build.</p>
 <form class="controls" method="get">
   <label>Titles contain <input type="text" name="q" value="{{ a.get('q','') }}" size="18"></label>
-  <label>From <input type="number" name="y0" value="{{ a.get('y0','') }}" min="1984" max="2019" style="width:5.5rem"></label>
-  <label>to <input type="number" name="y1" value="{{ a.get('y1','') }}" min="1984" max="2019" style="width:5.5rem"></label>
+  <label>From <input type="number" name="y0" value="{{ a.get('y0','') }}" min="1984" max="2024" style="width:5.5rem"></label>
+  <label>to <input type="number" name="y1" value="{{ a.get('y1','') }}" min="1984" max="2024" style="width:5.5rem"></label>
   <label>Role <select name="role"><option value="">any</option>{% for r in ['chair','presenter','respondent','facilitator','workshop leader'] %}<option {{ 'selected' if a.get('role')==r }}>{{ r }}</option>{% endfor %}</select></label>
   <label>Institution contains <input type="text" name="inst" value="{{ a.get('inst','') }}" size="18"></label>
   <label><input type="checkbox" name="non_us" value="1" {{ 'checked' if a.get('non_us')=='1' }}> outside the US</label>

@@ -4,4 +4,6 @@ server.log
 test_smoke.py
 build_iwac.py
 build_cw.py
+build_cptsc.py
+build_ccw.py
 .git

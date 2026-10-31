@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Formats and roles · CPTSC Program Reader{% endblock %}
+{% block main %}
+<h1>Session formats and roles</h1>
+<p class="lede">What kinds of sessions each volume printed, and which roles its listings carry.</p>
+<div class="caveat">Many volumes name a session's format, but each uses its own words, and a format is blank where the volume prints none. Roles come from the printed labels: moderators appear only where the volume prints them, so a low or zero moderator count in 1997 to 2001 or 2004 is a fact about the volume, not the meeting. The 1989 workshops list facilitators as roles and have no presenters.</div>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Session formats as printed</th>{% for k in kinds %}<th class="n">{{ k }}</th>{% endfor %}</tr></thead><tbody>
+{% for y, d in by_year.items() %}<tr><td><a href="{{ P }}/year/{{ y }}">{{ y }}</a></td>
+<td class="small">{% for t, n in d.types %}{{ t }} {{ n }}{{ '; ' if not loop.last }}{% endfor %}</td>
+{% for k in kinds %}<td class="n">{{ d.roles.get(k, 0)|num }}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

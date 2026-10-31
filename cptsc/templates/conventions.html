@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Conferences · CPTSC Program Reader{% endblock %}
+{% block main %}
+<h1>Conferences, cities and themes</h1>
+<p class="lede">The 50 annual CPTSC meetings in the corpus, 1974 to 2025, with the city of each and what its proceedings volume lets us read.</p>
+<div class="caveat">There is no volume in the corpus for 1976 or 2020. Each volume was read by a parser written for its layout, and the scanned volumes through 2004 were read by OCR and checked by hand against their contents, so the notes below say where the reading is weak. A volume is a set of proceedings, an agenda or an abstract book, and the papers' texts are not republished here.</div>
+<div class="tbl"><table><thead><tr><th>Year</th><th>City</th><th>Notes</th><th class="n">Sessions</th><th class="n">People</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><a href="{{ P }}/year/{{ r.year }}">{{ r.year }}</a>{% if r.status in ('cancelled','virtual','upcoming') %} <span class="badge">{{ r.status }}</span>{% endif %}</td>
+<td>{{ r.city or '' }}</td><td class="small">{{ r.theme or '' }}{% if notes.get(r.year) %}<br>{{ notes[r.year] }}{% endif %}</td><td class="n">{{ r.sessions|num }}</td><td class="n">{{ r.people|num }}</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

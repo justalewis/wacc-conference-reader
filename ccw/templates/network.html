@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% block title %}Panel network · Community Writing Program Reader{% endblock %}
+{% block main %}
+<h1>Panel network and teams</h1>
+<p class="lede">Who shares sessions with whom. The network joins people who were listed in the same session, in two windows (2015 to 2019 and 2021 to 2025) and across all six editions.</p>
+<div class="caveat"><b>Thresholds.</b> Only people listed at two or more conferences appear, and a line needs two shared sessions. Sessions with more than twelve of these people are left out. The graph keeps the 220 best-connected people in each window and is laid out by software, so a person's position says little. The heavily OCR'd programs (1985, 1997, 2007, 2008 and 2012) are not used for person pages, and a person appears only under an exact printed name, so two spellings split into two nodes. No one is ranked or labeled. See <a href="{{ P }}/ethics">ethics</a>.</div>
+<form class="controls" method="get"><label>Window <select name="era" onchange="this.form.submit()">{% for e in eras %}<option {{ 'selected' if e == era }}>{{ e }}</option>{% endfor %}</select></label>
+<span class="small">{{ net.nodes|length }} people, {{ net.edges|length }} links, from {{ net.sessions|num }} sessions</span></form>
+<div class="chart" style="height:560px;padding:0"><canvas id="g" style="width:100%;height:100%;display:block" role="img" aria-label="Network of people who shared sessions"></canvas></div>
+<p class="legend small"><span><i style="background:#a0522d"></i>mostly at institutions outside the US in this window</span><span><i style="background:#4f6f8f"></i>other institutions</span><span>Line width: shared sessions. Click a person to open their page.</span></p>
+<h2>Teams that return together</h2>
+<p class="small">Pairs who shared at least two sessions, across at least two conferences, both listed at two or more conferences.</p>
+<div class="tbl"><table><thead><tr><th>Pair</th><th class="n">Shared sessions</th><th>Conferences</th></tr></thead><tbody>
+{% for t in teams %}<tr><td><a href="{{ P }}/person/{{ t.a }}">{{ t.an }}</a> and <a href="{{ P }}/person/{{ t.b }}">{{ t.bn }}</a></td><td class="n">{{ t.n }}</td><td class="small">{{ t.years|join(', ') }}</td></tr>{% else %}<tr><td colspan="3" class="small">No pairs meet the threshold.</td></tr>{% endfor %}
+</tbody></table></div>
+<script>
+const G = {{ data|safe }};
+const cv = document.getElementById("g"), ctx = cv.getContext("2d");
+const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
+const idx = {}; const nodes = G.nodes.map((nd, i) => { idx[nd.id] = i; const a = Math.random() * 6.283; return Object.assign({x: W / 2 + Math.cos(a) * 120 * Math.random(), y: H / 2 + Math.sin(a) * 120 * Math.random(), vx: 0, vy: 0}, nd); });
+const edges = G.edges.map(e => ({a: idx[e.a], b: idx[e.b], n: e.n}));
+for (let it = 0; it < 320; it++) {
+  const cool = 1 - it / 320;
+  for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+    const a = nodes[i], b = nodes[j]; let dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy + 0.5; const f = 900 / d2, d = Math.sqrt(d2);
+    a.vx += dx / d * f; a.vy += dy / d * f; b.vx -= dx / d * f; b.vy -= dy / d * f; }
+  edges.forEach(e => { const a = nodes[e.a], b = nodes[e.b]; const dx = b.x - a.x, dy = b.y - a.y, d = Math.sqrt(dx * dx + dy * dy) + 0.01, f = (d - 38) * 0.02 * Math.min(e.n, 4);
+    a.vx += dx / d * f; a.vy += dy / d * f; b.vx -= dx / d * f; b.vy -= dy / d * f; });
+  nodes.forEach(nd => { nd.vx += (W / 2 - nd.x) * 0.012; nd.vy += (H / 2 - nd.y) * 0.012; nd.x += Math.max(-6, Math.min(6, nd.vx)) * cool; nd.y += Math.max(-6, Math.min(6, nd.vy)) * cool; nd.vx *= 0.6; nd.vy *= 0.6; nd.x = Math.max(20, Math.min(W - 20, nd.x)); nd.y = Math.max(20, Math.min(H - 20, nd.y)); });
+}
+const rad = n => 3 + Math.sqrt(n.deg) * 0.9;
+function draw(hover) {
+  ctx.clearRect(0, 0, W, H); ctx.lineCap = "round";
+  edges.forEach(e => { const a = nodes[e.a], b = nodes[e.b]; ctx.strokeStyle = "rgba(120,110,95,.35)"; ctx.lineWidth = Math.min(1 + (e.n - 1) * .8, 5); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); });
+  nodes.forEach(n => { ctx.fillStyle = n.two ? "#a0522d" : "#4f6f8f"; ctx.globalAlpha = .85; ctx.beginPath(); ctx.arc(n.x, n.y, rad(n), 0, 6.283); ctx.fill(); ctx.globalAlpha = 1; });
+  if (hover) { ctx.font = "13px system-ui"; const t = hover.name; const w = ctx.measureText(t).width; ctx.fillStyle = "rgba(255,255,255,.92)"; ctx.fillRect(hover.x + 8, hover.y - 20, w + 10, 20); ctx.fillStyle = "#1c2230"; ctx.fillText(t, hover.x + 13, hover.y - 6); }
+}
+const near = ev => { const r = cv.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top; return nodes.find(n => (n.x - x) ** 2 + (n.y - y) ** 2 < (rad(n) + 3) ** 2); };
+cv.addEventListener("mousemove", ev => { const n = near(ev); cv.style.cursor = n ? "pointer" : "default"; draw(n); });
+cv.addEventListener("click", ev => { const n = near(ev); if (n) location.href = "{{ P }}/person/" + encodeURIComponent(n.id); });
+draw();
+</script>
+{% endblock %}

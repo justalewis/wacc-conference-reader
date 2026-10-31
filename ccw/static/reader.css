@@ -1,0 +1,49 @@
+/* CCCC Program Reader. Components on the Alexandrian Suite tokens (tokens.css, fonts.css). */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--papyrus); color: var(--gloss); font-family: var(--f-body); font-size: var(--text-base); line-height: var(--leading-base); }
+a { color: var(--terracotta); text-underline-offset: 2px; } a:hover { color: var(--gloss); }
+.skip { position: absolute; left: -999px; } .skip:focus { left: 8px; top: 8px; background: var(--paper); padding: .4rem .8rem; z-index: 9; }
+header.site { border-bottom: 1px solid var(--rule-strong); background: var(--paper); }
+.bar { max-width: 74rem; margin: 0 auto; padding: .7rem 16px; display: flex; flex-wrap: wrap; gap: .4rem 1.6rem; align-items: baseline; }
+.brand { font-family: var(--f-display); font-size: 1.25rem; color: var(--gloss); text-decoration: none; letter-spacing: .01em; }
+.brand small { font-family: var(--f-ui); font-size: .72rem; color: var(--dilute); display: block; letter-spacing: .04em; text-transform: uppercase; }
+nav a { font-family: var(--f-ui); font-size: var(--text-sm); color: var(--gloss); text-decoration: none; margin-right: 1rem; }
+nav a:hover, nav a[aria-current] { color: var(--terracotta); text-decoration: underline; }
+main { max-width: 74rem; margin: 0 auto; padding: 1.4rem 16px 4rem; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 400; line-height: var(--leading-tight); }
+h1 { font-size: 1.9rem; margin: .2rem 0 .5rem; } h2 { font-size: 1.3rem; margin: 2rem 0 .5rem; } h3 { font-size: 1.05rem; margin: 1.2rem 0 .3rem; }
+.lede { max-width: 46rem; font-size: 1.08rem; color: var(--gloss-soft); }
+p, li { max-width: 52rem; }
+.small, .meta { font-family: var(--f-ui); font-size: var(--text-sm); color: var(--dilute); }
+.caveat { border-left: 3px solid var(--terracotta); background: var(--terracotta-wash); padding: .5rem .9rem; font-size: var(--text-sm); max-width: 52rem; margin: 1rem 0; }
+table { border-collapse: collapse; width: 100%; font-size: var(--text-sm); font-family: var(--f-ui); }
+th, td { text-align: left; vertical-align: top; padding: .32rem .5rem; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; color: var(--dilute); font-size: .74rem; text-transform: uppercase; letter-spacing: .03em; position: sticky; top: 0; background: var(--papyrus); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.tbl { overflow-x: auto; }
+.chart { position: relative; height: 340px; background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: .6rem; }
+.controls { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; margin: .8rem 0; font-family: var(--f-ui); font-size: var(--text-sm); }
+select, input[type=text], input[type=number], button { font: inherit; font-size: var(--text-sm); font-family: var(--f-ui); border: 1px solid var(--rule-strong); background: var(--paper); color: var(--gloss); border-radius: var(--radius-sm); padding: .35rem .6rem; }
+button, .btn { background: var(--gloss); color: var(--papyrus); cursor: pointer; text-decoration: none; display: inline-block; border-color: var(--gloss); }
+.btn.alt { background: var(--paper); color: var(--gloss); }
+.badge { font-family: var(--f-ui); font-size: .7rem; border: 1px solid var(--rule-strong); border-radius: 999px; padding: 0 .45rem; color: var(--dilute); white-space: nowrap; }
+.badge.warn { border-color: var(--terracotta); color: var(--terracotta); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .6rem; margin: 1rem 0; }
+.fact { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: .5rem .7rem; }
+.fact b { display: block; font-family: var(--f-display); font-size: 1.5rem; font-weight: 400; } .fact span { font-family: var(--f-ui); font-size: .78rem; color: var(--dilute); }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; } @media (max-width: 800px) { .cols { grid-template-columns: 1fr; } }
+ul.plain { list-style: none; padding: 0; } ul.plain li { padding: .15rem 0; }
+footer { max-width: 74rem; margin: 0 auto; padding: 1rem 16px 3rem; border-top: 1px solid var(--rule); font-family: var(--f-ui); font-size: .78rem; color: var(--dilute); }
+code { font-family: var(--f-mono); font-size: .88em; }
+.cite { font-family: var(--f-mono); font-size: .8rem; background: var(--paper); border: 1px solid var(--rule); padding: .5rem .7rem; max-width: 60rem; overflow-wrap: anywhere; }
+.legend span { display: inline-block; margin-right: 1rem; font-family: var(--f-ui); font-size: .78rem; } .legend i { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; margin-right: .3rem; vertical-align: -1px; }
+
+/* keyboard focus and reduced motion */
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible, canvas:focus-visible { outline: 3px solid var(--terracotta); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+.tbl { max-width: 100%; }
+img, svg, canvas { max-width: 100%; }
+@media (max-width: 600px) { h1 { font-size: 1.5rem; } .bar { gap: .3rem 1rem; } nav a { margin-right: .7rem; } main { padding-top: 1rem; } }
+
+.controls label, .controls select, .controls input[type=text] { max-width: 100%; }
+.controls select { text-overflow: ellipsis; }

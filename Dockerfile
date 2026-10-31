@@ -1,4 +1,4 @@
-# WAC Clearinghouse conference archives reader (selector, /cccc, /iwac, /cw). Deploy with fly.toml.
+# WAC Clearinghouse conference archives reader (selector, /cccc, /iwac, /cw, /cptsc, /ccw). Deploy with fly.toml.
 FROM python:3.12-slim
 WORKDIR /app
 COPY requirements.txt ./
@@ -8,6 +8,8 @@ COPY selector ./selector
 COPY cccc ./cccc
 COPY iwac ./iwac
 COPY cw ./cw
+COPY cptsc ./cptsc
+COPY ccw ./ccw
 COPY data ./data
 ENV PORT=8080
 EXPOSE 8080

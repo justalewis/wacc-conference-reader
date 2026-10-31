@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}{{ s.title or s.code }} · CPTSC Program Reader{% endblock %}
+{% block main %}
+<p class="small"><a href="{{ P }}/year/{{ s.year }}">{{ s.year }}{% if conv %} · {{ conv.city }}{% endif %}</a></p>
+<h1>{{ s.title or '(no title)' }}</h1>
+<p class="meta">{% if s.code %}Session {{ s.code }}{% endif %}{% if s.session_type %} · {{ s.session_type }}{% endif %}{% if s.room %} · {{ s.room }}{% endif %}</p>
+{% if s.area %}<p class="meta">Section: {{ s.area }}</p>{% endif %}
+{% if people %}<div class="tbl"><table><thead><tr><th>Role</th><th>Name as printed</th><th>Affiliation as printed</th><th>Paper</th></tr></thead><tbody>
+{% for p in people %}<tr><td>{{ p.role or '' }}</td>
+<td>{% if p.eligible %}<a href="{{ P }}/person/{{ p.person_id }}">{{ p.name_as_printed }}</a>{% else %}{{ p.name_as_printed }}{% endif %}</td>
+<td>{{ p.affiliation_as_printed or '' }}{% if p.institution_id %} <a class="small" href="{{ P }}/institution/{{ p.institution_id }}">→ {{ p.inst_name }}</a>{% endif %}</td>
+<td>{{ p.paper_title or '' }}</td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p>This session has a title in the proceedings but no listed people in the corpus.</p>{% endif %}
+<h2>Source</h2>
+<p class="small">{% if doc and doc.public_url %}<a href="{{ doc.public_url }}">{{ s.year }} proceedings on cptsc.org</a>{% elif doc %}Source: {{ doc.url }}{% endif %}. Names link to a person page only for people listed at two or more conferences.</p>{% if note %}<p class="small">{{ note }}</p>{% endif %}
+<p class="small">Cite as: CPTSC annual meeting. “{{ s.title }}.” <i>{{ s.year }} Proceedings</i>{% if conv and conv.city %}, {{ conv.city }}{% endif %}{% if s.code %}, session {{ s.code }}{% endif %}. Via CPTSC Program Reader, {{ today }}. The text of the paper is not republished here.</p>
+{% endblock %}

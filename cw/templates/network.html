@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% block title %}Panel network · Computers and Writing Program Reader{% endblock %}
 {% block main %}
 <h1>Panel network and teams</h1>
-<p class="lede">Who shares sessions with whom. The network joins people who were listed in the same session, in three windows of conferences.</p>
+<p class="lede">Who shares sessions with whom. The network joins people who were listed in the same session, in four windows of conferences.</p>
 <div class="caveat"><b>Thresholds.</b> Only people listed at two or more conferences appear, and a line needs two shared sessions. Sessions with more than twelve of these people are left out. The graph keeps the 220 best-connected people in each window and is laid out by software, so a person's position says little. The heavily OCR'd programs (1985, 1997, 2007, 2008 and 2012) are not used for person pages, and a person appears only under an exact printed name, so two spellings split into two nodes. No one is ranked or labeled. See <a href="{{ P }}/ethics">ethics</a>.</div>
 <form class="controls" method="get"><label>Window <select name="era" onchange="this.form.submit()">{% for e in eras %}<option {{ 'selected' if e == era }}>{{ e }}</option>{% endfor %}</select></label>
 <span class="small">{{ net.nodes|length }} people, {{ net.edges|length }} links, from {{ net.sessions|num }} sessions</span></form>

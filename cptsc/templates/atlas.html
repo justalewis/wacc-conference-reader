@@ -1,0 +1,35 @@
+{% extends "base.html" %}{% block title %}Atlas · CPTSC Program Reader{% endblock %}
+{% block main %}
+<h1>Atlas</h1>
+<p class="lede">Where the people listed in a volume come from, by the institution they gave. Each dot is an institution, sized by its listings that year.</p>
+<div class="caveat">The map shows institutions whose printed affiliation matched an institution with coordinates (the same institution list the CCCC, IWAC and Computers and Writing readers use): {{ on_map|num }} of the {{ total|num }} listings in {{ y }}. Unmatched affiliations are not on the map. Country counts come from the same matches.</div>
+<form class="controls" method="get"><label>Year <select name="year" onchange="this.form.submit()">{% for yy in years %}<option {{ 'selected' if yy == y }}>{{ yy }}</option>{% endfor %}</select></label></form>
+<div class="chart" style="height:auto;padding:0"><svg id="map" viewBox="0 0 960 500" width="100%" role="img" aria-label="World map of institutions listed in {{ y }}"></svg></div>
+<h2>Countries, {{ y }}</h2>
+<div class="tbl"><table><thead><tr><th>Country</th><th class="n">Listings</th><th class="n">Institutions</th></tr></thead><tbody>
+{% for c in countries %}<tr><td>{{ c.country }}</td><td class="n">{{ c.n|num }}</td><td class="n">{{ c.k|num }}</td></tr>{% endfor %}</tbody></table></div>
+<h2>Share outside the US, by meeting</h2>
+<div class="tbl"><table><thead><tr><th>Year</th><th>City</th><th class="n">Matched listings</th><th class="n">Outside the US</th></tr></thead><tbody>
+{% for s in shares %}<tr><td><a href="{{ P }}/atlas?year={{ s.year }}">{{ s.year }}</a></td><td>{{ s.city }}</td><td class="n">{{ s.matched|num }}</td><td class="n">{{ ((s.non_us / s.matched) if s.matched else None)|pct(0) }}</td></tr>{% endfor %}</tbody></table></div>
+<p class="small">Country outlines: Natural Earth via world-atlas (public domain).</p>
+<script>
+const D = {{ data|safe }};
+const W = 960, H = 500;
+const P = (lon, lat) => [(lon + 180) / 360 * (W - 20) + 10, (90 - lat) / 180 * (H - 20) + 10];
+const svg = document.getElementById("map"); const NS = "http://www.w3.org/2000/svg";
+const el = (name, attrs, parent) => { const e = document.createElementNS(NS, name); for (const a in attrs) e.setAttribute(a, attrs[a]); (parent || svg).appendChild(e); return e; };
+fetch("{{ P }}/static/world-110m.json").then(r => r.json()).then(topo => {
+  const [sx, sy] = topo.transform.scale, [tx, ty] = topo.transform.translate;
+  const arcs = topo.arcs.map(a => { let x = 0, y = 0; return a.map(p => { x += p[0]; y += p[1]; return [x * sx + tx, y * sy + ty]; }); });
+  const ring = idx => { let pts = []; idx.forEach(i => { const a = i < 0 ? arcs[~i].slice().reverse() : arcs[i]; pts = pts.concat(pts.length ? a.slice(1) : a); }); return pts; };
+  topo.objects.countries.geometries.forEach(g => {
+    const polys = g.type === "Polygon" ? [g.arcs] : g.type === "MultiPolygon" ? g.arcs : []; let d = "";
+    polys.forEach(poly => poly.forEach(r => { const pts = ring(r); if (pts.length > 2) d += "M" + pts.map(p => P(p[0], p[1]).map(v => v.toFixed(1)).join(",")).join("L") + "Z"; }));
+    if (d) el("path", {d, fill: "var(--paper)", stroke: "var(--rule-strong)", "stroke-width": ".4"});
+  });
+  D.points.slice().sort((a, b) => b.n - a.n).forEach(p => { const [x, y] = P(p.lon, p.lat);
+    const c = el("circle", {cx: x.toFixed(1), cy: y.toFixed(1), r: (2 + Math.sqrt(p.n) * 1.2).toFixed(1), fill: "#4f6f8f", "fill-opacity": ".55", stroke: "var(--gloss)", "stroke-width": ".4"});
+    el("title", {}, c).textContent = `${p.name}: ${p.n} listings, ${p.p} people`; });
+});
+</script>
+{% endblock %}

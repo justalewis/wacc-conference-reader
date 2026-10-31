@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% block title %}Conferences · Computers and Writing Program Reader{% endblock %}
 {% block main %}
 <h1>Conferences, cities and themes</h1>
-<p class="lede">The 28 Computers and Writing conferences in the corpus, 1984 to 2019, with the site printed on each program's title page and what the program lets us read.</p>
+<p class="lede">The 31 Computers and Writing conferences in the corpus, 1984 to 2024, with the site printed on each program's title page and what the program lets us read.</p>
 <div class="caveat">The conference has met every year since 1984 except 1987 and 1988 (not in the corpus). Each program was read by a parser written for that year's layout, so the notes below say where the reading is weak. A site is blank where the program's title page does not print one.</div>
 <div class="tbl"><table><thead><tr><th>Year</th><th>Site</th><th>Notes</th><th class="n">Sessions</th><th class="n">People</th></tr></thead><tbody>
 {% for r in rows %}<tr><td><a href="{{ P }}/year/{{ r.year }}">{{ r.year }}</a>{% if r.status in ('cancelled','virtual','upcoming') %} <span class="badge">{{ r.status }}</span>{% endif %}</td>

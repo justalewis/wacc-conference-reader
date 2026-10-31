@@ -1,8 +1,8 @@
 {% extends "base.html" %}{% block title %}Who convenes the field · Computers and Writing Program Reader{% endblock %}
 {% block main %}
 <h1>Who convenes the field?</h1>
-<p class="lede">Each Computers and Writing program lists the people the conference put on its stages: who chaired, who presented, who responded, and from which institutions. This page counts them, conference by conference, for the 28 programs in the corpus, 1984 to 2019.</p>
-<div class="caveat">These are people <b>listed in the program</b>, not registrants or attendees. Programs are missing for 1982 to 1983, 1987 to 1988, 1991 to 1994 and 2016 to 2017, several years are OCR'd scans, and 1999, 2001, 2002, 2006, 2018 and 2019 print few or no institutions. Shaded bands on the chart mark those breaks. <a href="{{ P }}/how-to-read">How to read these numbers</a>.</div>
+<p class="lede">Each Computers and Writing program lists the people the conference put on its stages: who chaired, who presented, who responded, and from which institutions. This page counts them, conference by conference, for the 31 programs in the corpus, 1984 to 2024.</p>
+<div class="caveat">These are people <b>listed in the program</b>, not registrants or attendees. Programs are missing for 1982 to 1983, 1987 to 1988, 1991 to 1994, 2016 to 2017 and 2020 to 2021, several years are OCR'd scans, 1999, 2001, 2002, 2006, 2018, 2019 and 2022 print few or no institutions, and the 2024 schedule names almost no one. Shaded bands on the chart mark those breaks. <a href="{{ P }}/how-to-read">How to read these numbers</a>.</div>
 <div class="facts">
   <div class="fact"><b>{{ rows|sum(attribute='sessions')|num }}</b><span>sessions</span></div>
   <div class="fact"><b>{{ rows|sum(attribute='appearances')|num }}</b><span>listings of a person in a session</span></div>
