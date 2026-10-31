@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}How to read{% endblock %}
+{% block main %}
+<h1>How to read these comparisons</h1>
+<p class="lede">Every number here comes from the readers' own databases. Synkrisis adds no data of its own; it lines the archives up.</p>
+<h2>What is compared</h2>
+<p>Each archive reads the printed programs of one conference series. A <b>listing</b> is one person in one role in one session, so a person who chairs and presents is listed twice. A <b>session</b> is a panel, workshop, keynote or similar unit the program prints. Programs are plans, so none of these counts says who attended or what was said.</p>
+<h2>Why shares and rates</h2>
+<p>The archives differ in size by a factor of thirty. A count of people in a small archive can only be read against that archive's own totals, so charts of counts are for shape, and comparisons across archives use shares or rates per 1,000 titles.</p>
+<h2>Gaps and weak years</h2>
+<p>A year with no program leaves a gap in a line instead of a zero. A year read from a heavily OCR'd scan is drawn as a diamond, and those years are left out of the people matches. Each archive's own caveats are on the <a href="{{ P }}/">overview</a> and in its reader.</p>
+<h2>People</h2>
+<p>No page names a person, and counts under five are not shown. People are matched on first and last name, with a stricter tier that also needs a shared institution; the matching rules are on the Prosopographia page.</p>
+<h2>Adding another conference</h2>
+<p>A new archive appears here after three steps: build its database to the contract in <code>check_series.py</code>, add an entry to <code>series.json</code>, and run <code>build_synkrisis.py</code>. The pages, the overview table and the landing page read the registry, so none of them changes. Up to eight archives can be compared at once because the chart palette has eight fixed hues.</p>
+{% endblock %}

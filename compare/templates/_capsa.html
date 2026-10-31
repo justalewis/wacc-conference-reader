@@ -1,0 +1,56 @@
+{# The capsa for Synkrisis, the comparator. Same shell as the readers (see ../shared). Links carry the chosen series in ?s=. #}
+{% macro ic(name, cls='') -%}<svg class="ic {{ cls }}" aria-hidden="true"><use href="#{{ name }}"/></svg>{%- endmacro %}
+{% set path = request.path %}
+{% set q = ('?s=' ~ selq) if selq else '' %}
+{% set tips = {'/': 'The archives and where each is weak', '/chronikon': 'The years side by side', '/oikoi': 'Institutions across archives', '/topoi': 'One term across archives', '/prosopographia': 'People listed in more than one archive, as counts'} %}
+{% set tools = [
+  ('/', 'Overview', 'ic-browse'),
+  ('/chronikon', 'Chronikon', 'ic-timeline'),
+  ('/oikoi', 'Oikoi', 'ic-institution'),
+  ('/topoi', 'Topoi', 'ic-trends'),
+  ('/prosopographia', 'Prosopographia', 'ic-person'),
+] %}
+<aside class="capsa">
+  <div class="capsa-head">
+    <a class="wordmark" href="{{ P }}/{{ q }}">
+      {{ ic('ic-synkrisis', 'ic-wordmark') }}
+      <span>
+        <span class="name">Synkrisis</span>
+        <span class="sub">The conference archives, compared</span>
+      </span>
+    </a>
+  </div>
+
+  <nav class="capsa-nav" aria-label="Comparisons and archives">
+    <div class="nav-group">Compare</div>
+    {% for href, label, icon in tools %}
+    <div class="nav-item">
+      <a class="nav-link" title="{{ tips[href] }}" href="{{ P }}{{ href }}{{ q }}" {% if (href == '/' and path == '/') or (href != '/' and path == href) %}aria-current="page"{% endif %}>
+        {{ ic(icon, 'ic-sm') }}<span class="nav-label">{{ label }}</span>
+      </a>
+    </div>
+    {% endfor %}
+    <div class="nav-group">About</div>
+    <div class="nav-item">
+      <a class="nav-link" href="{{ P }}/how-to-read{{ q }}" {% if path == '/how-to-read' %}aria-current="page"{% endif %}>{{ ic('ic-method', 'ic-sm') }}<span class="nav-label">How to read</span></a>
+    </div>
+
+    <details class="tags-fold" id="tags-fold" open>
+      <summary><span>Archives</span><span class="tags-count">{{ series_all|length }}</span></summary>
+      <div class="tags">
+        <div class="tags-head">Open one archive</div>
+        {% for s in series_all %}
+        <a class="tag" href="{{ reader_url(s.key) }}/">
+          <span class="jname"><i class="swatch" style="background:var(--cat-{{ s.color }})"></i>{{ s.short }}</span>
+          <span class="jmeta"><span class="jcount">{{ s.conventions }}</span></span>
+        </a>
+        {% endfor %}
+      </div>
+    </details>
+  </nav>
+
+  <div class="capsa-foot">
+    <a class="capsa-back" href="{{ ROOT }}">&#8592; All archives</a>
+    <button class="figure-toggle" type="button" id="figure-toggle" aria-live="polite" hidden>Black-figure</button>
+  </div>
+</aside>

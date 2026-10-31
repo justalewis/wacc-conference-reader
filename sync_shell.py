@@ -10,4 +10,12 @@ for r in ("cccc", "iwac", "cw", "cptsc", "ccw"):
     for f in ("_icons.html", "_capsa.html"):
         shutil.copyfile(os.path.join(S, f), os.path.join(HERE, r, "templates", f))
 shutil.copyfile(os.path.join(S, "_icons.html"), os.path.join(HERE, "selector", "templates", "_icons.html"))
+# The comparator has its own capsa and templates; it takes the shared styles, scripts and icons, and the type and chart files from cccc.
+C = os.path.join(HERE, "compare")
+for f in ("reader.css", "figure.js", "figure-head.js"):
+    shutil.copyfile(os.path.join(S, f), os.path.join(C, "static", f))
+shutil.copyfile(os.path.join(S, "_icons.html"), os.path.join(C, "templates", "_icons.html"))
+for f in ("tokens.css", "fonts.css", "chart.umd.min.js", "chart-defaults.js"):
+    shutil.copyfile(os.path.join(HERE, "cccc", "static", f), os.path.join(C, "static", f))
+shutil.copytree(os.path.join(HERE, "cccc", "static", "fonts"), os.path.join(C, "static", "fonts"), dirs_exist_ok=True)
 print("synced")

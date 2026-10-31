@@ -1,4 +1,4 @@
-"""Smoke test: every page of all five readers answers, and every internal link carries its prefix.  python test_smoke.py"""
+"""Smoke test: every page of all five readers and the comparator answers, and every internal link carries its prefix.  python test_smoke.py"""
 import re, sqlite3
 from werkzeug.test import Client
 import wsgi
@@ -19,13 +19,16 @@ paths = ["/", "/cccc/", "/cccc/tools", "/cccc/year/2005", "/cccc/atlas?year=2005
          "/cptsc/", "/cptsc/tools", "/cptsc/conventions", "/cptsc/year/1997", "/cptsc/year/2015", "/cptsc/institutions", "/cptsc/network", "/cptsc/formats", "/cptsc/atlas",
          "/cptsc/trends?terms=assessment,usability", "/cptsc/corpus?q=assessment", "/cptsc/search?q=writing", "/cptsc/how-to-read", "/cptsc/ethics", f"/cptsc/person/{tpid}",
          "/ccw/", "/ccw/tools", "/ccw/conventions", "/ccw/year/2015", "/ccw/year/2023", "/ccw/year/2025", "/ccw/institutions", "/ccw/network", "/ccw/network?era=2015%E2%80%932019",
-         "/ccw/formats", "/ccw/atlas", "/ccw/trends?terms=prison,literacy", "/ccw/corpus?q=prison", "/ccw/search?q=writing", "/ccw/how-to-read", "/ccw/ethics", f"/ccw/person/{xpid}"]
+         "/ccw/formats", "/ccw/atlas", "/ccw/trends?terms=prison,literacy", "/ccw/corpus?q=prison", "/ccw/search?q=writing", "/ccw/how-to-read", "/ccw/ethics", f"/ccw/person/{xpid}",
+         "/compare/", "/compare/chronikon", "/compare/chronikon?m=newcomer_share&s=cw,cptsc,ccw", "/compare/chronikon?m=gini&y0=2000&y1=2025", "/compare/oikoi", "/compare/oikoi?name=state&min=3",
+         "/compare/oikoi?s=cccc,iwac&outside=1", "/compare/topoi", "/compare/topoi?term=assessment", "/compare/topoi?term=antiracis*&scope=papers&s=cccc,cw", "/compare/topoi?term=hypertext&d0=1990&d1=2009",
+         "/compare/prosopographia", "/compare/prosopographia?s=iwac,cw,cptsc", "/compare/how-to-read"]
 bad = 0
 for p in paths:
     r = c.get(p)
     body = r.get_data(as_text=True)
-    prefix = "/iwac" if p.startswith("/iwac") else "/cccc" if p.startswith("/cccc") else "/cptsc" if p.startswith("/cptsc") else "/ccw" if p.startswith("/ccw") else "/cw" if p.startswith("/cw") else ""
-    off = [l for l in re.findall(r'(?:href|src|action)="(/[^"]*)"', body) if prefix and not (l.startswith(prefix) or l == "/")]
+    prefix = "/compare" if p.startswith("/compare") else "/iwac" if p.startswith("/iwac") else "/cccc" if p.startswith("/cccc") else "/cptsc" if p.startswith("/cptsc") else "/ccw" if p.startswith("/ccw") else "/cw" if p.startswith("/cw") else ""
+    off = [l for l in re.findall(r'(?:href|src|action)="(/[^"]*)"', body) if prefix and not (l.startswith(prefix) or l == "/" or (prefix == "/compare" and l.split("/")[1] in ("cccc", "iwac", "cw", "cptsc", "ccw")))]
     if r.status_code != 200 or off:
         bad += 1
         print("FAIL", r.status_code, p, off[:3])

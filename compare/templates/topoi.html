@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% block title %}Topoi{% endblock %}
+{% block main %}
+<h1>Topoi</h1>
+<p class="lede">How often a word or phrase appears in session and paper titles, in every archive at once. Enter one term. Use <code>*</code> to let a word continue: <code>antiracis*</code> finds antiracism and antiracist.</p>
+<form class="controls" method="get">
+  {% include "_picker.html" %}
+  <input type="text" name="term" value="{{ term }}" size="30" placeholder="assessment" aria-label="Term">
+  <select name="scope" aria-label="Which titles"><option value="all" {{ 'selected' if scope=='all' }}>Session and paper titles</option><option value="sessions" {{ 'selected' if scope=='sessions' }}>Session titles only</option><option value="papers" {{ 'selected' if scope=='papers' }}>Paper titles only</option></select>
+  <button>Plot</button>
+</form>
+{% if has %}
+<div class="chart"><canvas id="c" role="img" aria-label="Line chart of how often the term appears in titles, per 1,000 titles, one line per archive"></canvas></div>
+<p class="small">Matching titles per 1,000 titles that year. Each archive prints paper titles in different years and for different shares of its listings, so a rise can be a change in what the program prints. Diamonds mark years read from OCR'd scans. A year with fewer than 30 titles is not drawn, because one title would swing the rate; the peak is taken from the years that are drawn and have two or more matching titles.</p>
+<div class="tbl"><table class="matrix"><thead><tr><th>Archive</th><th class="n">Matching titles</th><th class="n">Of titles</th><th class="n">First year with 2 or more</th><th class="n">Peak year</th><th class="n">Peak per 1,000</th><th></th></tr></thead><tbody>
+{% for r in table %}<tr><th><i class="swatch" style="background:var(--cat-{{ reg[r.key].color }})"></i>{{ r.short }}</th><td class="n">{{ r.total|num }}</td><td class="n">{{ r.titles|num }}</td><td class="n">{{ r.first or 'none' }}</td><td class="n">{{ r.peak or 'none' }}</td><td class="n">{{ r.peak_rate if r.peak_rate is not none else '' }}</td><td><a href="{{ reader_url(r.key) }}/titles?term={{ term|urlencode }}&scope={{ scope }}">Read the titles</a></td></tr>{% endfor %}
+</tbody></table></div>
+<div class="caveat">A word in a title is not the concept it names. Open the matching titles in each archive before drawing a conclusion, and treat a first year based on two titles as a lead, not a date.</div>
+<script src="{{ P }}/static/chart.umd.min.js"></script><script src="{{ P }}/static/chart-defaults.js"></script><script src="{{ P }}/static/compare.js"></script>
+<script>const D = {{ data|safe }}; drawSeries("c", D, "per 1,000 titles", false);</script>
+{% endif %}
+
+<h2>Words that set an archive apart</h2>
+<form class="controls" method="get">
+  {% include "_picker.html" %}
+  <label>From <input type="number" name="d0" value="{{ d0 or '' }}" min="1970" max="2030" style="width:5rem"></label>
+  <label>to <input type="number" name="d1" value="{{ d1 or '' }}" min="1970" max="2030" style="width:5rem"></label>
+  <input type="hidden" name="term" value="{{ term }}"><input type="hidden" name="scope" value="{{ scope }}">
+  <button>Recompute</button>
+</form>
+<p class="small">For each archive, the words of four or more letters that appear in its titles far more often than in the other chosen archives' titles (log-odds, words in at least five of its titles). The count is the number of that archive's titles with the word. Decades are counted whole, so a range ends on a decade boundary.</p>
+<div class="tbl"><table class="matrix"><thead><tr>{% for k in sel if k in distinct %}<th><i class="swatch" style="background:var(--cat-{{ reg[k].color }})"></i>{{ reg[k].short }}</th>{% endfor %}</tr></thead><tbody>
+{% for i in range(15) %}<tr>{% for k in sel if k in distinct %}<td style="text-align:left">{% if distinct[k]|length > i %}{{ distinct[k][i][0] }} <span class="dim">{{ distinct[k][i][1] }}</span>{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{# Which archives to compare. Include inside a <form method="get">. Past eight the palette would repeat a hue, so the form stops there. #}
+<fieldset class="picker" style="border:0;padding:0">
+  <legend class="vh">Archives to compare</legend>
+  <span>Compare:</span>
+  {% for s in series_all %}
+  <label><input type="checkbox" class="pick" value="{{ s.key }}" {{ 'checked' if s.key in sel }}> <i class="swatch" style="background:var(--cat-{{ s.color }})"></i>{{ s.short }}</label>
+  {% endfor %}
+  <input type="hidden" name="s" id="s" value="{{ sel|join(',') }}">
+</fieldset>
+<script>
+(function () {
+  var f = document.getElementById("s").form, boxes = f.querySelectorAll(".pick");
+  f.addEventListener("submit", function () {
+    var v = []; boxes.forEach(function (b) { if (b.checked) v.push(b.value); });
+    document.getElementById("s").value = v.slice(0, 8).join(",");
+  });
+})();
+</script>

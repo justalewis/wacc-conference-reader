@@ -516,3 +516,25 @@ main.column { max-width: none; margin: 0; padding: 0; }
   .column-inner { padding: var(--space-6) var(--space-4) var(--space-10); }
   .column-foot { padding: var(--space-6) var(--space-4) var(--space-10); }
 }
+
+/* Chart colour: eight fixed hues, one per series, never cycled (same palette and rule as the WPA-L reader). */
+:root {
+  --cat-1: #A8462C; --cat-2: #008B78; --cat-3: #B0821A; --cat-4: #5A57A8;
+  --cat-5: #3E7D2A; --cat-6: #8A3A73; --cat-7: #1466A0; --cat-8: #A83A5C; --cat-other: #8C8271;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --cat-1: #C96B50; --cat-2: #2FA890; --cat-3: #A8842A; --cat-4: #7F7BC8;
+    --cat-5: #6BA34B; --cat-6: #B2689C; --cat-7: #4F93C7; --cat-8: #CB6E88; --cat-other: #877C69;
+  }
+}
+:root[data-theme="dark"] {
+  --cat-1: #C96B50; --cat-2: #2FA890; --cat-3: #A8842A; --cat-4: #7F7BC8;
+  --cat-5: #6BA34B; --cat-6: #B2689C; --cat-7: #4F93C7; --cat-8: #CB6E88; --cat-other: #877C69;
+}
+.swatch { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; margin-right: .4rem; vertical-align: -1px; }
+.picker { display: flex; flex-wrap: wrap; gap: .3rem 1rem; align-items: center; margin: .8rem 0; font-family: var(--f-ui); font-size: var(--text-sm); }
+.picker label { white-space: nowrap; }
+td.dim, .dim { color: var(--dilute-light); }
+.matrix td, .matrix th { text-align: right; }
+.matrix th:first-child, .matrix tbody th { text-align: left; }

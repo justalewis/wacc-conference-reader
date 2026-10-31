@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% block title %}Overview{% endblock %}
+{% block main %}
+<h1>Synkrisis</h1>
+<p class="lede">Synkrisis is the ancient rhetorical exercise of setting two subjects side by side. Here it sets the conference archives side by side: the same measures for every series, on the same years, with each series' gaps left visible. Pick a comparison from the sidebar.</p>
+<div class="caveat">These are people <b>listed in a program</b>, not attendees. The series differ in size by a factor of thirty, so every page leads with shares and rates, and counts are given beside them. No page names a person.</div>
+<div class="tbl"><table class="matrix"><thead><tr><th>Archive</th><th class="n">Years</th><th class="n">Conferences</th><th class="n">Sessions</th><th class="n">Listings</th><th class="n">People</th></tr></thead><tbody>
+{% for s in rows %}<tr><th><i class="swatch" style="background:var(--cat-{{ s.color }})"></i><a href="{{ reader_url(s.key) }}/">{{ s.short }}</a></th><td class="n">{{ s.y0 }} to {{ s.y1 }}</td><td class="n">{{ s.conventions }}</td><td class="n">{{ s.sessions|num }}</td><td class="n">{{ s.listings|num }}</td><td class="n">{{ s.people|num }}</td></tr>{% endfor %}
+</tbody></table></div>
+<p class="small">People is the count of distinct names in that archive's own database, so a person listed in two archives counts once in each.</p>
+
+<h2>The comparisons</h2>
+<div class="facts" style="grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))">
+<div class="fact"><b style="font-size:1.15rem"><a href="{{ P }}/chronikon">Chronikon</a></b><span>Any measure from the yearly census, every series on one set of years: size, newcomers, institutions printed, concentration.</span></div>
+<div class="fact"><b style="font-size:1.15rem"><a href="{{ P }}/oikoi">Oikoi</a></b><span>Which schools appear in which archives, how much each archive leans on its top schools, and how alike the lists are.</span></div>
+<div class="fact"><b style="font-size:1.15rem"><a href="{{ P }}/topoi">Topoi</a></b><span>One word or phrase across every archive's titles, the year it takes off in each, and the words that set an archive apart.</span></div>
+<div class="fact"><b style="font-size:1.15rem"><a href="{{ P }}/prosopographia">Prosopographia</a></b><span>How many people are listed in more than one archive, which archive they appear in first, as counts only.</span></div>
+</div>
+
+<h2>Where each archive is weak</h2>
+<ul class="plain">
+{% for s in rows %}<li><i class="swatch" style="background:var(--cat-{{ s.color }})"></i><b>{{ s.short }}.</b> {{ s.caveat }}</li>{% endfor %}
+</ul>
+{% endblock %}

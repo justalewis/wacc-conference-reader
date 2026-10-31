@@ -28,6 +28,10 @@
       <a class="nav-link" href="{{ request.script_root }}/" aria-current="page">{{ ic('ic-browse', 'ic-sm') }}<span class="nav-label">All archives</span></a>
     </div>
 
+    {% if compare %}<div class="nav-item">
+      <a class="nav-link" href="{{ request.script_root }}/compare/">{{ ic('ic-synkrisis', 'ic-sm') }}<span class="nav-label">Compare the archives</span></a>
+    </div>{% endif %}
+
     <details class="tags-fold" id="tags-fold" open>
       <summary><span>Archives</span><span class="tags-count">{{ corpora|length }}</span></summary>
       <div class="tags">
@@ -61,6 +65,9 @@
 <a class="btn" href="{{ request.script_root }}{{ c.url }}">Open the {{ c.short }} reader</a></section>
 {% endfor %}
 </div>
+{% if compare %}<section class="card" style="max-width:48rem"><h2>Synkrisis: compare the archives</h2>
+<p>The same measures for every archive on one set of years: size and newcomers by year, which schools appear where, one word across every archive's titles, and how many people are listed in more than one archive (as counts only, never names).</p>
+<a class="btn" href="{{ request.script_root }}/compare/">Open Synkrisis</a></section>{% endif %}
 <div class="caveat">These are people <b>listed in a program</b>, not attendees. A program is a plan, and every figure is a count of listings. Each reader says where its years are weak.</div>
 <h2>Tools the readers share</h2>
 <p class="small">Census by year, institutions, atlas, panel network, search, terms over time, conferences, formats, and a corpus builder. The CCCC reader adds groups, calls and area by institution type, and the IWAC reader adds areas for 2020 and 2025; the Computers and Writing, CPTSC and Community Writing readers have neither.</p>

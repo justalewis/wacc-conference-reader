@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}Prosopographia{% endblock %}
+{% block main %}
+<h1>Prosopographia</h1>
+<p class="lede">How many people are listed in more than one archive. This page gives counts and nothing else: no name, no list of names, no profile. Counts under {{ 5 }} are not shown.</p>
+<div class="caveat"><b>How people are matched.</b> The archives have no shared person identifier, so two listings are matched on first and last name, and only when the first name is more than an initial. A <b>strict</b> match also needs a shared institution (the same ROR id) in both archives. A <b>possible</b> match is the same name with no shared institution, which includes every case where one program prints no institution. Common names produce false matches in both tiers, and a person who changed institutions is missed by the strict tier. Heavily OCR'd years are left out.</div>
+
+<h2>People in both archives, pair by pair</h2>
+<p class="small">Each cell is <b>strict</b> / <b>possible</b>. Pairs are unordered, so the table is read across a row to the column archive.</p>
+<div class="tbl"><table class="matrix"><thead><tr><th>Archive</th>{% for k in sel %}<th>{{ reg[k].short }}</th>{% endfor %}</tr></thead><tbody>
+{% for a in sel %}<tr><th><i class="swatch" style="background:var(--cat-{{ reg[a].color }})"></i>{{ reg[a].short }}</th>
+{% for b in sel %}<td>{% if a == b %}<span class="dim">{{ size[a]|num }} names</span>{% else %}{% set p = pairs.get((a, b)) or pairs.get((b, a)) %}{% if p %}{{ small(p.strict) }} / {{ small(p.possible) }}{% endif %}{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+
+<h2>People by number of archives</h2>
+<p class="small">Across all {{ nser }} registered archives, not only the ones chosen above. <b>Listed in</b> is the number of archives where the name appears. <b>Strict</b> is the largest group of those archives joined by strict matches.</p>
+<div class="tbl"><table class="matrix"><thead><tr><th>Listed in</th><th class="n">Strict group of</th><th class="n">Names</th></tr></thead><tbody>
+{% for r in span %}<tr><th>{{ r.n_series }} archives</th><td class="n">{{ r.strict_span }}</td><td class="n">{{ small(r.n) }}</td></tr>{% endfor %}
+</tbody></table></div>
+
+<h2>Which archive comes first</h2>
+<p class="small">Among strict matches, the number of people whose earliest listing is in the row archive and whose earliest listing in the column archive comes later. Ties in year are left out. A person's earliest listing here is the earliest <i>in these programs</i>, and archives that start later cannot show an earlier start.</p>
+<div class="tbl"><table class="matrix"><thead><tr><th>First listed in</th>{% for k in sel %}<th>then {{ reg[k].short }}</th>{% endfor %}</tr></thead><tbody>
+{% for a in sel %}<tr><th><i class="swatch" style="background:var(--cat-{{ reg[a].color }})"></i>{{ reg[a].short }}</th>
+{% for b in sel %}<td>{% if a == b %}<span class="dim">-</span>{% else %}{{ small(arrival.get((a, b), 0)) }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+<p class="small">To ask that a listing be corrected or removed from the readers, write to the address on the <a href="{{ ROOT }}">landing page</a>. A removal in a reader removes the listing from these counts at the next build.</p>
+{% endblock %}

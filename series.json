@@ -1,0 +1,248 @@
+{
+ "_note": "Registry of conference series. The landing page, the comparator (/compare) and the smoke test read it. To add a conference: build data/<key>.db to the contract in check_series.py, add an entry here, add a reader at <key>/ if it needs one, then run build_synkrisis.py. color is a fixed index into the --cat-1..8 chart palette and is never reused.",
+ "series": [
+  {
+   "key": "cccc",
+   "db": "cccc.db",
+   "name": "CCCC convention programs",
+   "short": "CCCC",
+   "url": "/cccc/",
+   "blurb": "The Conference on College Composition and Communication, from NCTE's printed and online programs.",
+   "caveat": "2000 to 2003 are missing and 2018 prints hashtags where other years print areas.",
+   "color": 1,
+   "ocr_years": [],
+   "breaks": [
+    {
+     "from": 2000,
+     "to": 2003,
+     "label": "No program in the corpus (2000–2003)",
+     "kind": "gap"
+    },
+    {
+     "from": 2020,
+     "to": 2020,
+     "label": "2020: program of a cancelled convention",
+     "kind": "cancelled"
+    },
+    {
+     "from": 2021,
+     "to": 2022,
+     "label": "2021–2022: virtual conventions",
+     "kind": "virtual"
+    },
+    {
+     "from": 2024,
+     "to": 2024,
+     "label": "2024: source changes from PDF to eShow",
+     "kind": "source"
+    },
+    {
+     "from": 2027,
+     "to": 2027,
+     "label": "2027: listing before the convention",
+     "kind": "provisional"
+    }
+   ]
+  },
+  {
+   "key": "iwac",
+   "db": "iwac.db",
+   "name": "International WAC Conference programs",
+   "short": "IWAC",
+   "url": "/iwac/",
+   "blurb": "The International Writing Across the Curriculum Conference, from the programs the Clearinghouse hosts.",
+   "caveat": "A draft: 2002 is an OCR'd scan, and 2008 and 2016 have known weak spots.",
+   "color": 2,
+   "ocr_years": [
+    2002
+   ],
+   "breaks": [
+    {
+     "from": 2002,
+     "to": 2002,
+     "label": "2002: OCR of a scanned program, low confidence",
+     "kind": "source"
+    },
+    {
+     "from": 2003,
+     "to": 2003,
+     "label": "No program in the corpus in odd years before 2023 (the conference ran every two years)",
+     "kind": "gap"
+    },
+    {
+     "from": 2021,
+     "to": 2021,
+     "label": "2020 conference held virtually in 2021",
+     "kind": "virtual"
+    }
+   ]
+  },
+  {
+   "key": "cw",
+   "db": "cw.db",
+   "name": "Computers and Writing conference programs",
+   "short": "Computers and Writing",
+   "url": "/cw/",
+   "blurb": "The Computers and Writing Conference, from the program PDFs in Are We There Yet? (Computers and Composition Digital Press), and for 2022 to 2024 from programs the organizers supplied.",
+   "caveat": "A draft: 1987 to 1988, 1991 to 1994, 2016 to 2017 and 2020 to 2021 are missing, 1997, 2007, 2008 and 2012 are weak scans, seven years print few or no institutions, and the 2024 schedule names almost no one.",
+   "color": 3,
+   "ocr_years": [
+    1985,
+    1997,
+    2007,
+    2008,
+    2012
+   ],
+   "breaks": [
+    {
+     "from": 1987,
+     "to": 1988,
+     "label": "1987 and 1988: no program in the corpus",
+     "kind": "gap"
+    },
+    {
+     "from": 1991,
+     "to": 1994,
+     "label": "1991 to 1994: no program in the corpus",
+     "kind": "gap"
+    },
+    {
+     "from": 2016,
+     "to": 2017,
+     "label": "2016 and 2017: programs are at the WAC Clearinghouse, not in this corpus",
+     "kind": "gap"
+    },
+    {
+     "from": 2020,
+     "to": 2021,
+     "label": "2020 and 2021: no program in the corpus",
+     "kind": "gap"
+    },
+    {
+     "from": 2007,
+     "to": 2008,
+     "label": "2007 and 2008: OCR of scanned programs, low confidence",
+     "kind": "source"
+    },
+    {
+     "from": 2018,
+     "to": 2019,
+     "label": "2018 and 2019: the programs print names without institutions",
+     "kind": "source"
+    },
+    {
+     "from": 2022,
+     "to": 2022,
+     "label": "2022: the program prints names without institutions",
+     "kind": "source"
+    },
+    {
+     "from": 2024,
+     "to": 2024,
+     "label": "2024: the schedule names no one for its concurrent sessions, only the opening town hall and the keynotes",
+     "kind": "source"
+    }
+   ]
+  },
+  {
+   "key": "cptsc",
+   "db": "cptsc.db",
+   "name": "CPTSC conference proceedings",
+   "short": "CPTSC",
+   "url": "/cptsc/",
+   "blurb": "The annual meeting of the Council for Programs in Technical and Scientific Communication, from the proceedings volumes on cptsc.org.",
+   "caveat": "A draft: 1976 and 2020 are missing, 2016 was cancelled but its proceedings were published, the volumes through 2004 are scans read by OCR and checked by hand, and 1989 is an agenda.",
+   "color": 4,
+   "ocr_years": [
+    1999
+   ],
+   "breaks": [
+    {
+     "from": 1976,
+     "to": 1976,
+     "label": "1976: no volume in the capture",
+     "kind": "gap"
+    },
+    {
+     "from": 2020,
+     "to": 2020,
+     "label": "2020: no volume captured",
+     "kind": "gap"
+    },
+    {
+     "from": 1974,
+     "to": 2004,
+     "label": "1974 to 2004: scanned volumes were read by OCR and checked by hand against the contents",
+     "kind": "source"
+    },
+    {
+     "from": 1997,
+     "to": 2001,
+     "label": "1997 to 2001: the contents print names only, so institutions come from each paper's byline",
+     "kind": "source"
+    },
+    {
+     "from": 2009,
+     "to": 2009,
+     "label": "2009: a third of the listings carry no institution",
+     "kind": "source"
+    },
+    {
+     "from": 2016,
+     "to": 2016,
+     "label": "2016: the conference was cancelled for Hurricane Matthew; the proceedings were still published",
+     "kind": "event"
+    }
+   ]
+  },
+  {
+   "key": "ccw",
+   "db": "ccw.db",
+   "name": "Conference on Community Writing programs",
+   "short": "Community Writing",
+   "url": "/ccw/",
+   "blurb": "The Conference on Community Writing, from the programs the Coalition for Community Writing published: two PDFs, a schedule page and two public program documents.",
+   "caveat": "A draft: the conference meets in odd years, 2025 is only its public DeepThink Tank listing and one keynote, and the 2019 and 2021 programs print some chairs and speakers without institutions.",
+   "color": 5,
+   "ocr_years": [],
+   "breaks": [
+    {
+     "from": 2016,
+     "to": 2016,
+     "label": "2016, 2018, 2020, 2022 and 2024: the conference meets in odd years, so there is no edition",
+     "kind": "gap"
+    },
+    {
+     "from": 2018,
+     "to": 2018,
+     "label": "2016, 2018, 2020, 2022 and 2024: the conference meets in odd years, so there is no edition",
+     "kind": "gap"
+    },
+    {
+     "from": 2020,
+     "to": 2020,
+     "label": "2016, 2018, 2020, 2022 and 2024: the conference meets in odd years, so there is no edition",
+     "kind": "gap"
+    },
+    {
+     "from": 2022,
+     "to": 2022,
+     "label": "2016, 2018, 2020, 2022 and 2024: the conference meets in odd years, so there is no edition",
+     "kind": "gap"
+    },
+    {
+     "from": 2024,
+     "to": 2024,
+     "label": "2016, 2018, 2020, 2022 and 2024: the conference meets in odd years, so there is no edition",
+     "kind": "gap"
+    },
+    {
+     "from": 2025,
+     "to": 2025,
+     "label": "2025: only the DeepThink Tanks and one keynote speaker are public; the rest of the schedule is behind a registration portal",
+     "kind": "source"
+    }
+   ]
+  }
+ ]
+}

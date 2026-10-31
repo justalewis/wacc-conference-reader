@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block title %}Oikoi{% endblock %}
+{% block main %}
+<h1>Oikoi</h1>
+<p class="lede">The institutions that printed affiliations were matched to, compared across archives. Institutions carry the same identifier (a ROR id) in every archive, so a school is one school wherever it appears.</p>
+<form class="controls" method="get">
+  {% include "_picker.html" %}
+  <label>Name contains <input type="text" name="name" value="{{ name }}" size="18"></label>
+  <label>Appears in at least <input type="number" name="min" value="{{ minser }}" min="1" max="8" style="width:3.5rem"> archives</label>
+  <label><input type="checkbox" name="outside" value="1" {{ 'checked' if outside }}> outside the US</label>
+  <button>Filter</button>
+</form>
+
+<h2>How alike the lists are</h2>
+<p class="small">Each cell reads from the row archive toward the column archive. <b>Shared</b> is the number of institutions in both. <b>Top 25</b> is how many of the row archive's 25 most-listed institutions are also among the column archive's 25.</p>
+<div class="tbl"><table class="matrix"><thead><tr><th>Institutions</th>{% for k in sel %}<th>{{ reg[k].short }}</th>{% endfor %}</tr></thead><tbody>
+{% for a in sel %}<tr><th><i class="swatch" style="background:var(--cat-{{ reg[a].color }})"></i>{{ reg[a].short }} <span class="dim">({{ sizes[a]|num }})</span></th>
+{% for b in sel %}<td>{% if a == b %}<span class="dim">{{ sizes[a]|num }}</span>{% else %}{{ mat[(a, b)].shared|num }} shared, {{ mat[(a, b)].top }} of 25{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+
+<h2>Institutions in more than one archive</h2>
+<p class="small">{{ n_rows|num }} institutions match the filter; the first 150 are listed, widest spread first, then by total listings. Each archive column gives listings per 1,000 listings that print a matched institution in that archive, so a school's weight in a small archive can be read against its weight in a large one.</p>
+<div class="tbl"><table class="matrix"><thead><tr><th>Institution</th><th>Country</th><th class="n">Archives</th>{% for k in sel %}<th><i class="swatch" style="background:var(--cat-{{ reg[k].color }})"></i>{{ reg[k].short }}</th>{% endfor %}</tr></thead><tbody>
+{% for r in rows %}<tr><th>{{ r.name }}</th><td>{{ r.country or '' }}</td><td class="n">{{ r.n }}</td>
+{% for k in sel %}<td class="{{ 'dim' if r.per[k] is none }}" title="{{ r.raw[k] or 0 }} listings">{% if r.per[k] is none %}none{% else %}{{ '%.1f' % r.per[k] }}{% endif %}</td>{% endfor %}</tr>
+{% else %}<tr><td colspan="{{ 3 + sel|length }}">No institution matches.</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="caveat">A school appears here only when a program printed an affiliation that could be matched to it. Archives that print few institutions (Computers and Writing in several years, for one) look smaller than they are, and a host school's own staff can raise its count in the years it hosted.</div>
+{% endblock %}

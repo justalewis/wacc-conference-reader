@@ -7,3 +7,8 @@ build_cw.py
 build_cptsc.py
 build_ccw.py
 .git
+build_synkrisis.py
+check_series.py
+sync_shell.py
+shared
+notes

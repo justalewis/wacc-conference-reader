@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% block title %}Chronikon{% endblock %}
+{% block main %}
+<h1>Chronikon</h1>
+<p class="lede">The census of each archive on one set of years. Choose a measure and the archives to compare. A year with no program leaves a gap in the line, and a year read from a heavily OCR'd scan is drawn as a diamond.</p>
+<form class="controls" method="get">
+  {% include "_picker.html" %}
+  <label>Measure <select name="m">{% for k, label, kind in metrics %}<option value="{{ k }}" {{ 'selected' if k == m }}>{{ label }}</option>{% endfor %}</select></label>
+  <label>From <input type="number" name="y0" value="{{ y0 or '' }}" min="1970" max="2030" style="width:5rem"></label>
+  <label>to <input type="number" name="y1" value="{{ y1 or '' }}" min="1970" max="2030" style="width:5rem"></label>
+  <button>Plot</button>
+</form>
+<div class="chart"><canvas id="c" role="img" aria-label="Line chart of {{ tbl.label }} by year, one line per archive"></canvas></div>
+<p class="small">{{ tbl.label }}. Shares and ratios use each year's own totals; counts are not adjusted for the size of the archive, so compare shapes, not heights, when the archives differ in size.</p>
+{% if m in ('newcomer_share', 'returner_share') %}<p class="small">The first year of each archive is 100% newcomers by construction, since nobody was listed earlier. Read the line from the second year on.</p>{% endif %}
+<div class="tbl"><table class="matrix"><thead><tr><th>Year</th>{% for s in tbl.series %}<th><i class="swatch" style="background:var(--cat-{{ s.color }})"></i>{{ s.short }}</th>{% endfor %}</tr></thead><tbody>
+{% for y in tbl.years %}{% set i = loop.index0 %}<tr><th>{{ y }}</th>{% for s in tbl.series %}<td class="{{ 'dim' if s['values'][i] is none }}">{% if s['values'][i] is none %}none{% elif tbl.kind == 'share' %}{{ '%.1f' % (100 * s['values'][i]) }}%{% else %}{{ s['values'][i] }}{% endif %}{% if s.ocr[i] %} ◇{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+<p class="small">◇ marks a year read from an OCR'd scan with heavy recognition noise.</p>
+<h2>Known gaps and weak years</h2>
+{% for g in gaps %}<p class="small"><i class="swatch" style="background:var(--cat-{{ reg[g.key].color }})"></i><b>{{ g.short }}.</b> {% for b in g.breaks %}{{ b.label }}{{ '; ' if not loop.last }}{% else %}None recorded.{% endfor %}</p>{% endfor %}
+<script src="{{ P }}/static/chart.umd.min.js"></script><script src="{{ P }}/static/chart-defaults.js"></script><script src="{{ P }}/static/compare.js"></script>
+<script>const D = {{ data|safe }}; drawSeries("c", D, D.label, D.kind === "share");</script>
+{% endblock %}

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>{% block title %}Synkrisis{% endblock %} · Conference archives</title>
+<link rel="stylesheet" href="{{ P }}/static/tokens.css"><link rel="stylesheet" href="{{ P }}/static/fonts.css"><link rel="stylesheet" href="{{ P }}/static/reader.css">
+<meta name="theme-color" content="#F5EFE1" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#171512" media="(prefers-color-scheme: dark)">
+<script src="{{ P }}/static/figure-head.js"></script>
+</head><body>
+{% include "_icons.html" %}
+<a class="skip" href="#main">Skip to the page</a>
+<div class="layout">
+{% include "_capsa.html" %}
+<main class="column" id="main" tabindex="-1">
+<div class="draft-banner" role="note">Working draft. The comparisons are still being checked, and corrections are welcome.</div>
+<div class="column-inner">{% block main %}{% endblock %}</div>
+<footer class="column-foot">Counts are people <b>listed in a program</b>, not attendees. No page here names a person. Data built {{ build_date }}. <a href="{{ P }}/how-to-read{{ '?s=' ~ selq if selq }}">How to read</a> · <a href="{{ ROOT }}">All archives</a></footer>
+</main>
+</div>
+<script src="{{ P }}/static/figure.js"></script>
+</body></html>
