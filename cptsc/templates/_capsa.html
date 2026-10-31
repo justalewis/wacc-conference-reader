@@ -1,0 +1,79 @@
+{# ============================================================
+   The capsa for a conference reader: wordmark, destinations, years.
+   Modeled on the WPA-L Archive Reader's base.html. A reader's base.html
+   sets reader_name and reader_sub, then includes this file. Links use
+   {{ P }} because each reader is mounted under its own prefix.
+   Destinations differ by reader (corpus): CCCC adds areas, groups, calls,
+   area by institution type and program anatomy; IWAC adds areas; CCCC has
+   no formats page.
+   ============================================================ #}
+{% macro ic(name, cls='') -%}<svg class="ic {{ cls }}" aria-hidden="true"><use href="#{{ name }}"/></svg>{%- endmacro %}
+{% set path = request.path %}
+{% set read = [
+  ('/', 'Who convenes', 'ic-browse'),
+  ('/conventions', 'Conventions', 'ic-event'),
+  ('/institutions', 'Institutions', 'ic-institution'),
+  ('/atlas', 'Atlas', 'ic-atlas'),
+  ('/network', 'Panel network', 'ic-network'),
+  ('/trends', 'Terms over time', 'ic-trends'),
+] %}
+{% if corpus == 'cccc' %}
+  {% set read = read + [('/areas', 'Proposal areas', 'ic-topics'), ('/area-types', 'Area by institution type', 'ic-institution'), ('/groups', 'Groups', 'ic-person'), ('/calls', 'Call and program', 'ic-cfp'), ('/anatomy', 'Program anatomy', 'ic-timeline')] %}
+{% elif corpus == 'iwac' %}
+  {% set read = read + [('/areas', 'Areas', 'ic-topics'), ('/formats', 'Formats', 'ic-genre')] %}
+{% else %}
+  {% set read = read + [('/formats', 'Formats', 'ic-genre')] %}
+{% endif %}
+{% set use = [
+  ('/search', 'Search', 'ic-search'),
+  ('/corpus', 'Corpus builder', 'ic-data'),
+  ('/tools', 'All tools', 'ic-topics'),
+] %}
+{% set about = [
+  ('/how-to-read', 'How to read', 'ic-method'),
+  ('/ethics', 'Ethics', 'ic-confidence'),
+  ('/about', 'About', 'ic-about'),
+] %}
+<aside class="capsa">
+  <div class="capsa-head">
+    <a class="wordmark" href="{{ P }}/">
+      {{ ic('ic-program', 'ic-wordmark') }}
+      <span>
+        <span class="name">{{ reader_name }}</span>
+        <span class="sub">{{ reader_sub }}</span>
+      </span>
+    </a>
+    <form class="capsa-search" action="{{ P }}/search" role="search"><input type="text" name="q" placeholder="Search names, titles, colleges" aria-label="Search names, titles and colleges"></form>
+  </div>
+
+  <nav class="capsa-nav" aria-label="Sections and years">
+    {% for group, items in (('Read the programs', read), ('Work with them', use), ('About this reader', about)) %}
+    <div class="nav-group">{{ group }}</div>
+    {% for href, label, icon in items %}
+    <div class="nav-item">
+      <a class="nav-link" href="{{ P }}{{ href }}" {% if (href == '/' and path == '/') or (href != '/' and (path == href or path.startswith(href + '/'))) %}aria-current="page"{% endif %}>
+        {{ ic(icon, 'ic-sm') }}<span class="nav-label">{{ label }}</span>
+      </a>
+    </div>
+    {% endfor %}
+    {% endfor %}
+
+    <details class="tags-fold" id="tags-fold" open>
+      <summary><span>Years</span><span class="tags-count">{{ capsa_years|length }}</span></summary>
+      <div class="tags">
+        <div class="tags-head">Years, with sessions listed</div>
+        {% for y in capsa_years %}
+        <a class="tag" href="{{ P }}/year/{{ y.year }}" {% if path == '/year/' ~ y.year %}aria-current="page"{% endif %}>
+          <span class="jname">{{ y.year }}</span>
+          <span class="jmeta"><span class="jcount">{{ "{:,}".format(y.n) }}</span></span>
+        </a>
+        {% endfor %}
+      </div>
+    </details>
+  </nav>
+
+  <div class="capsa-foot">
+    <a class="capsa-back" href="{{ ROOT }}">&#8592; All archives</a>
+    <button class="figure-toggle" type="button" id="figure-toggle" aria-live="polite" hidden>Black-figure</button>
+  </div>
+</aside>

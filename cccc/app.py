@@ -107,7 +107,7 @@ def headers(r):
 
 @app.context_processor
 def inject():
-    return {"build_date": build_date(), "repo_url": REPO_URL, "data_url": DATA_URL, "P": request.script_root, "ROOT": (request.script_root.rsplit("/", 1)[0] or "") + "/", "corpus": "cccc"}
+    return {"build_date": build_date(), "repo_url": REPO_URL, "data_url": DATA_URL, "P": request.script_root, "ROOT": (request.script_root.rsplit("/", 1)[0] or "") + "/", "corpus": "cccc", "capsa_years": [{"year": c["year"], "n": c["sessions"] or 0} for c in q("SELECT year, sessions FROM census ORDER BY year")]}
 
 @app.route("/robots.txt")
 def robots():

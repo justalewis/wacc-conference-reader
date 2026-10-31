@@ -3,11 +3,53 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Conference archives · WAC Clearinghouse</title>
 <link rel="stylesheet" href="{{ request.script_root }}/static/tokens.css"><link rel="stylesheet" href="{{ request.script_root }}/static/fonts.css"><link rel="stylesheet" href="{{ request.script_root }}/static/reader.css">
-<style>.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:1.25rem;margin:1.5rem 0}.card{border:1px solid var(--rule);background:var(--paper);padding:1.25rem 1.4rem}.card h2{margin-top:0}.card .btn{display:inline-block;margin-top:.5rem}.card dl{margin:.6rem 0}.card dt{float:left;clear:left;width:8rem;color:var(--ink-soft,#5a5046)}.card dd{margin:0 0 .25rem 8rem}</style>
+<meta name="theme-color" content="#F5EFE1" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#171512" media="(prefers-color-scheme: dark)">
+<script src="{{ request.script_root }}/static/figure-head.js"></script>
+<style>.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:1.25rem;margin:1.5rem 0}.card{border:1px solid var(--rule);background:var(--paper);padding:1.25rem 1.4rem}.card h2{margin-top:0}.card .btn{display:inline-block;margin-top:.5rem}.card dl{margin:.6rem 0}.card dt{float:left;clear:left;width:8rem;color:var(--dilute)}.card dd{margin:0 0 .25rem 8rem}</style>
 </head><body>
+{% include "_icons.html" %}
+{% macro ic(name, cls='') -%}<svg class="ic {{ cls }}" aria-hidden="true"><use href="#{{ name }}"/></svg>{%- endmacro %}
 <a class="skip" href="#main">Skip to the page</a>
-<header class="site"><div class="bar"><a class="brand" href="{{ request.script_root }}/">Conference archives<small>WAC Clearinghouse program readers</small></a></div></header>
-<main id="main">
+<div class="layout">
+<aside class="capsa">
+  <div class="capsa-head">
+    <a class="wordmark" href="{{ request.script_root }}/">
+      {{ ic('ic-program', 'ic-wordmark') }}
+      <span>
+        <span class="name">Conference archives</span>
+        <span class="sub">WAC Clearinghouse program readers</span>
+      </span>
+    </a>
+  </div>
+
+  <nav class="capsa-nav" aria-label="Archives">
+    <div class="nav-group">Read the programs</div>
+    <div class="nav-item">
+      <a class="nav-link" href="{{ request.script_root }}/" aria-current="page">{{ ic('ic-browse', 'ic-sm') }}<span class="nav-label">All archives</span></a>
+    </div>
+
+    <details class="tags-fold" id="tags-fold" open>
+      <summary><span>Archives</span><span class="tags-count">{{ corpora|length }}</span></summary>
+      <div class="tags">
+        <div class="tags-head">Archives, with conferences read</div>
+        {% for c in corpora %}
+        <a class="tag" href="{{ request.script_root }}{{ c.url }}">
+          <span class="jname">{{ c.short }}</span>
+          <span class="jmeta"><span class="jcount">{{ c.conferences }}</span></span>
+        </a>
+        {% endfor %}
+      </div>
+    </details>
+  </nav>
+
+  <div class="capsa-foot">
+    <button class="figure-toggle" type="button" id="figure-toggle" aria-live="polite" hidden>Black-figure</button>
+  </div>
+</aside>
+
+<main class="column" id="main" tabindex="-1">
+<div class="draft-banner" role="note">Working draft. The text and tools are still being checked, and corrections are welcome.</div>
+<div class="column-inner">
 <h1>Choose a conference archive</h1>
 <p class="lede">Each archive reads the printed programs of one conference series and offers the same set of tools: who is listed, from which institutions, under which areas, and which words appear in the titles. Pick an archive to start.</p>
 <div class="cards">
@@ -22,6 +64,9 @@
 <div class="caveat">These are people <b>listed in a program</b>, not attendees. A program is a plan, and every figure is a count of listings. Each reader says where its years are weak.</div>
 <h2>Tools the readers share</h2>
 <p class="small">Census by year, institutions, atlas, panel network, search, terms over time, conferences, formats, and a corpus builder. The CCCC reader adds groups, calls and area by institution type, and the IWAC reader adds areas for 2020 and 2025; the Computers and Writing, CPTSC and Community Writing readers have neither.</p>
+</div>
+<footer class="column-foot">Nothing here is indexed by search engines. To correct a listing or ask that a page be removed, write to jlewis2@olympic.edu.</footer>
 </main>
-<footer>Nothing here is indexed by search engines. To correct a listing or ask that a page be removed, write to jlewis2@olympic.edu.</footer>
+</div>
+<script src="{{ request.script_root }}/static/figure.js"></script>
 </body></html>
