@@ -1,18 +1,18 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it."
-title: "WAC Clearinghouse Conference Archives Reader: CCCC and IWAC program readers"
+title: "WAC Clearinghouse Conference Archives Reader: five program readers and Synkrisis"
 type: software
-version: "0.1.0"
-date-released: "2026-10-29"
+version: "2.0.0"
+date-released: "2026-11-01"
 license: MIT
 doi: "10.5281/zenodo.23780138"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.23780139"
-    description: "Version 0.1.0. The first DOI above resolves to all versions."
+    description: "Version 0.1.0 (CCCC and IWAC only). The first DOI above resolves to all versions."
 repository-code: "https://github.com/justalewis/wacc-conference-reader"
 url: "https://wacc-conference-reader.fly.dev"
-abstract: "A Flask application that reads the programs of the CCCC and IWAC conferences with one set of tools: census, institutions, atlas, panel network, areas, terms over time, search and a corpus builder."
+abstract: "A Flask application that reads the programs of five conference series (CCCC, IWAC, Computers and Writing, CPTSC and the Conference on Community Writing) with one set of tools, plus Synkrisis, a comparator across the archives."
 authors:
   - family-names: "Lewis"
     given-names: "Justin"

@@ -1,9 +1,13 @@
 {
-  "title": "WAC Clearinghouse Conference Archives Reader: CCCC and IWAC program readers",
+  "title": "WAC Clearinghouse Conference Archives Reader: five program readers and Synkrisis",
   "upload_type": "software",
-  "description": "<p>A Flask application that reads the printed programs of two conference series, the Conference on College Composition and Communication (CCCC) and the International Writing Across the Curriculum Conference (IWAC), and offers one set of tools across both: census by year, institutions, atlas, panel network, areas, terms over time, search and a corpus builder. A selector page at the root sends visitors to either archive.</p><p>The CCCC reader is the code of the CCCC Program Reader (https://doi.org/10.5281/zenodo.23753772), made prefix-safe so both readers can be mounted in one site. The IWAC reader reads programs hosted by the WAC Clearinghouse, parsed from PDF and web programs for 2002 to 2025. The IWAC data is used with the Clearinghouse's permission. Several years are weak and say so on the site: 2002 is an OCR'd scan, 2008 has authors without institutions, and 2016 prints names and institutions without a separator.</p><p>Person pages exist only for people listed at two or more conferences, every page is noindex, and session descriptions are left out of the databases. The code is MIT licensed. The repository includes the Fly deployment files and notes for hosting the site under IIS.</p>",
+  "description": "<p>A Flask application that reads the printed programs of five conference series, the Conference on College Composition and Communication (CCCC), the International Writing Across the Curriculum Conference (IWAC), Computers and Writing, the Council for Programs in Technical and Scientific Communication (CPTSC) and the Conference on Community Writing, and offers one set of tools across all of them: census by year, institutions, atlas, panel network, terms over time, formats, search and a corpus builder. A landing page sends visitors to each archive, and every reader uses the sidebar layout and icon sprite of the WPA-L Archive Reader.</p><p>Version 2.0.0 adds the Computers and Writing, CPTSC and Community Writing readers, and Synkrisis, a comparator with four tools: Chronikon (the years side by side), Oikoi (institutions), Topoi (one term across archives) and Prosopographia (people matched across archives, as counts only). Synkrisis reads a registry of series, so a new conference needs a database that passes a contract check and one registry entry.</p><p>The CCCC reader is the code of the CCCC Program Reader (https://doi.org/10.5281/zenodo.23753772), made prefix-safe so the readers can be mounted in one site. Several years are weak and say so on each reader: scanned programs read by OCR, programs that print names without institutions, and years with no program in the corpus. The databases are used with the permission of the organizers.</p><p>Person pages exist only for people listed at two or more conferences, no comparator page names a person, every page is noindex, and session descriptions and abstracts are left out of the databases. The code is MIT licensed. The repository includes the Fly deployment files and notes for hosting the site under IIS.</p>",
   "creators": [
-    {"name": "Lewis, Justin", "affiliation": "Olympic College", "orcid": "0000-0003-2144-7971"}
+    {
+      "name": "Lewis, Justin",
+      "affiliation": "Olympic College",
+      "orcid": "0000-0003-2144-7971"
+    }
   ],
   "license": "MIT",
   "access_right": "open",
@@ -14,10 +18,25 @@
     "writing studies",
     "conference programs",
     "disciplinography",
-    "Flask"
+    "Flask",
+    "Computers and Writing",
+    "CPTSC",
+    "Conference on Community Writing",
+    "bibliometrics",
+    "distant reading"
   ],
   "related_identifiers": [
-    {"identifier": "10.5281/zenodo.23753772", "relation": "isDerivedFrom", "scheme": "doi", "resource_type": "software"},
-    {"identifier": "10.5281/zenodo.23751615", "relation": "isSupplementTo", "scheme": "doi", "resource_type": "dataset"}
+    {
+      "identifier": "10.5281/zenodo.23753772",
+      "relation": "isDerivedFrom",
+      "scheme": "doi",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "10.5281/zenodo.23751615",
+      "relation": "isSupplementTo",
+      "scheme": "doi",
+      "resource_type": "dataset"
+    }
   ]
 }
