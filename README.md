@@ -19,4 +19,4 @@ Licenses: the code is MIT. `data/cccc.db` is the release of the CCCC Convention 
 
 Live site: https://wacc-conference-reader.fly.dev/
 
-Cite: Lewis, Justin. WAC Clearinghouse Conference Archives Reader. Zenodo, https://doi.org/10.5281/zenodo.23780138 (all versions).
+Cite: Lewis, Justin. WAC Clearinghouse Conference Archives Reader. Zenodo, https://doi.org/10.5281/zenodo.23780138 (all versions; v2.0.0 is 10.5281/zenodo.23871035).

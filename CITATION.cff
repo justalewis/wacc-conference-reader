@@ -8,6 +8,9 @@ license: MIT
 doi: "10.5281/zenodo.23780138"
 identifiers:
   - type: doi
+    value: "10.5281/zenodo.23871035"
+    description: "Version 2.0.0 (five readers and Synkrisis)."
+  - type: doi
     value: "10.5281/zenodo.23780139"
     description: "Version 0.1.0 (CCCC and IWAC only). The first DOI above resolves to all versions."
 repository-code: "https://github.com/justalewis/wacc-conference-reader"
